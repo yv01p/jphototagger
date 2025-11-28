@@ -170,6 +170,7 @@ public final class Timeline {
      * @param   date day - only the year, month and day are compared
      * @return  node or null if no such node exists
      */
+    @SuppressWarnings("unchecked")
     private DefaultMutableTreeNode getNodeOfDay(Date date) {
         DefaultMutableTreeNode monthNodeOfCal = getNodeOfMonth(date);
 
@@ -177,7 +178,8 @@ public final class Timeline {
             return null;
         }
 
-        @SuppressWarnings("unchecked") Enumeration<DefaultMutableTreeNode> days = monthNodeOfCal.children();
+        Enumeration<?> daysRaw = monthNodeOfCal.children();
+        Enumeration<DefaultMutableTreeNode> days = (Enumeration<DefaultMutableTreeNode>) daysRaw;
         DefaultMutableTreeNode dayNodeOfCal = null;
 
         while ((dayNodeOfCal == null) && days.hasMoreElements()) {
@@ -202,6 +204,7 @@ public final class Timeline {
      * @param   date day - only the year and month are compared
      * @return  node or null if no such node exists
      */
+    @SuppressWarnings("unchecked")
     private DefaultMutableTreeNode getNodeOfMonth(Date date) {
         DefaultMutableTreeNode yearNodeOfCal = getNodeOfYear(date);
 
@@ -209,7 +212,8 @@ public final class Timeline {
             return null;
         }
 
-        @SuppressWarnings("unchecked") Enumeration<DefaultMutableTreeNode> months = yearNodeOfCal.children();
+        Enumeration<?> monthsRaw = yearNodeOfCal.children();
+        Enumeration<DefaultMutableTreeNode> months = (Enumeration<DefaultMutableTreeNode>) monthsRaw;
         DefaultMutableTreeNode monthNodeOfCal = null;
 
         while ((monthNodeOfCal == null) && months.hasMoreElements()) {
@@ -234,8 +238,10 @@ public final class Timeline {
      * @param   date day - only the year is checked
      * @return  node or null if no such node exists
      */
+    @SuppressWarnings("unchecked")
     private DefaultMutableTreeNode getNodeOfYear(Date date) {
-        @SuppressWarnings("unchecked") Enumeration<DefaultMutableTreeNode> years = ROOT_NODE.children();
+        Enumeration<?> yearsRaw = ROOT_NODE.children();
+        Enumeration<DefaultMutableTreeNode> years = (Enumeration<DefaultMutableTreeNode>) yearsRaw;
         DefaultMutableTreeNode yearNodeOfCal = null;
 
         while ((yearNodeOfCal == null) && years.hasMoreElements()) {
