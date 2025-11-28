@@ -31,10 +31,10 @@ public final class SortedChildrenTreeNode extends DefaultMutableTreeNode impleme
         super(userObject, allowsChildren);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public void sortChildren() {
         if (sortEnabled && this.children != null) {
-            Collections.sort(this.children);
+            Collections.sort((Vector) this.children);
         }
     }
 

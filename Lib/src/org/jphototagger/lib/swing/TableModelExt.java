@@ -16,8 +16,9 @@ public class TableModelExt extends DefaultTableModel {
         super(data, columnNames);
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public TableModelExt(Vector<?> data, Vector<?> columnNames) {
-        super(data, columnNames);
+        super((Vector) data, (Vector) columnNames);
     }
 
     public TableModelExt(Object[] columnNames, int rowCount) {
