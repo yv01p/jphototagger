@@ -29,7 +29,3 @@ sourceSets {
         java.srcDirs("test")
     }
 }
-
-tasks.test {
-    enabled = false  // TODO: Requires infrastructure setup - external resources, test fixtures
-}
