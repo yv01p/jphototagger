@@ -6,6 +6,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 // Tier 0: No internal dependencies
 include("API")
 include("Localization")
+include("TestSupport")
 
 // Tier 1: Depends on Tier 0
 include("Resources")
