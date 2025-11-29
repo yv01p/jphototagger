@@ -1,9 +1,9 @@
 package org.jphototagger.testsupport;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Stream;
 
 /**
  * Provides temporary files and directories for testing.
@@ -36,13 +36,15 @@ public final class TestFiles {
      */
     public static void deleteRecursively(Path path) throws IOException {
         if (Files.isDirectory(path)) {
-            Files.list(path).forEach(child -> {
-                try {
-                    deleteRecursively(child);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            try (Stream<Path> stream = Files.list(path)) {
+                stream.forEach(child -> {
+                    try {
+                        deleteRecursively(child);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            }
         }
         Files.deleteIfExists(path);
     }

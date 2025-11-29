@@ -1,18 +1,18 @@
 package org.jphototagger.testsupport;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Provides isolated in-memory HSQLDB databases for testing.
  * Each test gets a fresh database instance.
  */
-public final class TestDatabase {
+public final class TestDatabase implements AutoCloseable {
 
-    private static int instanceCounter = 0;
+    private static final AtomicInteger instanceCounter = new AtomicInteger(0);
 
     private final String dbName;
     private Connection connection;
@@ -26,7 +26,7 @@ public final class TestDatabase {
      * Each call returns a unique database instance.
      */
     public static TestDatabase createInMemory() {
-        String uniqueName = "testdb_" + System.currentTimeMillis() + "_" + (++instanceCounter);
+        String uniqueName = "testdb_" + System.currentTimeMillis() + "_" + instanceCounter.incrementAndGet();
         return new TestDatabase(uniqueName);
     }
 
