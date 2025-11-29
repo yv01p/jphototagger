@@ -29,22 +29,17 @@ public final class SqliteSavedSearchesDatabase extends SqliteDatabase {
      */
     public int getCount() {
         int count = -1;
-        Connection con = null;
-        Statement stmt = null;
-        ResultSet rs = null;
-        try {
-            con = getConnection();
-            stmt = con.createStatement();
+        try (Connection con = getConnection();
+             Statement stmt = con.createStatement()) {
             String sql = "SELECT COUNT(*) FROM saved_searches";
             LOGGER.log(Level.FINEST, sql);
-            rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                count = rs.getInt(1);
+            try (ResultSet rs = stmt.executeQuery(sql)) {
+                if (rs.next()) {
+                    count = rs.getInt(1);
+                }
             }
         } catch (Throwable t) {
             LOGGER.log(Level.SEVERE, null, t);
-        } finally {
-            close(rs, stmt);
         }
         return count;
     }
@@ -59,9 +54,7 @@ public final class SqliteSavedSearchesDatabase extends SqliteDatabase {
         if (name == null) {
             throw new NullPointerException("name == null");
         }
-        Connection con = null;
-        try {
-            con = getConnection();
+        try (Connection con = getConnection()) {
             long id = findId(con, name);
             return id > 0;
         } catch (Throwable t) {
@@ -83,28 +76,26 @@ public final class SqliteSavedSearchesDatabase extends SqliteDatabase {
             throw new NullPointerException("name == null");
         }
         boolean inserted = false;
-        Connection con = null;
-        PreparedStatement stmt = null;
-        try {
-            con = getConnection();
+        try (Connection con = getConnection()) {
             con.setAutoCommit(false);
-            stmt = con.prepareStatement(getInsertSql());
-            stmt.setString(1, name);
-            if (customSql != null) {
-                stmt.setBytes(2, customSql.getBytes());
-            } else {
-                stmt.setNull(2, java.sql.Types.BLOB);
+            try (PreparedStatement stmt = con.prepareStatement(getInsertSql())) {
+                stmt.setString(1, name);
+                if (customSql != null) {
+                    stmt.setBytes(2, customSql.getBytes());
+                } else {
+                    stmt.setNull(2, java.sql.Types.BLOB);
+                }
+                stmt.setShort(3, searchType);
+                LOGGER.log(Level.FINER, stmt.toString());
+                stmt.executeUpdate();
+                con.commit();
+                inserted = true;
+            } catch (Throwable t) {
+                LOGGER.log(Level.SEVERE, null, t);
+                rollback(con);
             }
-            stmt.setShort(3, searchType);
-            LOGGER.log(Level.FINER, stmt.toString());
-            stmt.executeUpdate();
-            con.commit();
-            inserted = true;
         } catch (Throwable t) {
             LOGGER.log(Level.SEVERE, null, t);
-            rollback(con);
-        } finally {
-            close(stmt);
         }
         return inserted;
     }
@@ -121,22 +112,20 @@ public final class SqliteSavedSearchesDatabase extends SqliteDatabase {
             throw new NullPointerException("name == null");
         }
         boolean deleted = false;
-        Connection con = null;
-        PreparedStatement stmt = null;
-        try {
-            con = getConnection();
+        try (Connection con = getConnection()) {
             con.setAutoCommit(false);
-            stmt = con.prepareStatement("DELETE FROM saved_searches WHERE name = ?");
-            stmt.setString(1, name);
-            LOGGER.log(Level.FINER, stmt.toString());
-            int count = stmt.executeUpdate();
-            con.commit();
-            deleted = count > 0;
+            try (PreparedStatement stmt = con.prepareStatement("DELETE FROM saved_searches WHERE name = ?")) {
+                stmt.setString(1, name);
+                LOGGER.log(Level.FINER, stmt.toString());
+                int count = stmt.executeUpdate();
+                con.commit();
+                deleted = count > 0;
+            } catch (Throwable t) {
+                LOGGER.log(Level.SEVERE, null, t);
+                rollback(con);
+            }
         } catch (Throwable t) {
             LOGGER.log(Level.SEVERE, null, t);
-            rollback(con);
-        } finally {
-            close(stmt);
         }
         return deleted;
     }
@@ -156,12 +145,9 @@ public final class SqliteSavedSearchesDatabase extends SqliteDatabase {
             throw new NullPointerException("toName == null");
         }
         boolean renamed = false;
-        Connection con = null;
-        PreparedStatement stmt = null;
-        try {
-            con = getConnection();
+        try (Connection con = getConnection();
+             PreparedStatement stmt = con.prepareStatement("UPDATE saved_searches SET name = ? WHERE name = ?")) {
             con.setAutoCommit(true);
-            stmt = con.prepareStatement("UPDATE saved_searches SET name = ? WHERE name = ?");
             stmt.setString(1, toName);
             stmt.setString(2, fromName);
             LOGGER.log(Level.FINER, stmt.toString());
@@ -169,8 +155,6 @@ public final class SqliteSavedSearchesDatabase extends SqliteDatabase {
             renamed = count > 0;
         } catch (Throwable t) {
             LOGGER.log(Level.SEVERE, null, t);
-        } finally {
-            close(stmt);
         }
         return renamed;
     }
@@ -186,27 +170,22 @@ public final class SqliteSavedSearchesDatabase extends SqliteDatabase {
             throw new NullPointerException("name == null");
         }
         SavedSearchData savedSearch = null;
-        Connection con = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            con = getConnection();
-            stmt = con.prepareStatement(getFindSql());
+        try (Connection con = getConnection();
+             PreparedStatement stmt = con.prepareStatement(getFindSql())) {
             stmt.setString(1, name);
             LOGGER.log(Level.FINEST, stmt.toString());
-            rs = stmt.executeQuery();
-            if (rs.next()) {
-                String searchName = rs.getString(1);
-                byte[] customSqlBytes = rs.getBytes(2);
-                String customSql = customSqlBytes != null ? new String(customSqlBytes) : null;
-                short searchType = rs.getShort(3);
-                savedSearch = new SavedSearchData(searchName, customSql, searchType);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String searchName = rs.getString(1);
+                    byte[] customSqlBytes = rs.getBytes(2);
+                    String customSql = customSqlBytes != null ? new String(customSqlBytes) : null;
+                    short searchType = rs.getShort(3);
+                    savedSearch = new SavedSearchData(searchName, customSql, searchType);
+                }
             }
         } catch (Throwable t) {
             savedSearch = null;
             LOGGER.log(Level.SEVERE, null, t);
-        } finally {
-            close(rs, stmt);
         }
         return savedSearch;
     }
@@ -218,28 +197,23 @@ public final class SqliteSavedSearchesDatabase extends SqliteDatabase {
      */
     public List<SavedSearchData> getAll() {
         List<SavedSearchData> searches = new ArrayList<>();
-        Connection con = null;
-        Statement stmt = null;
-        ResultSet rs = null;
-        try {
-            con = getConnection();
-            stmt = con.createStatement();
+        try (Connection con = getConnection();
+             Statement stmt = con.createStatement()) {
             String sql = getGetAllSql();
             LOGGER.log(Level.FINEST, sql);
-            rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                String name = rs.getString(1);
-                byte[] customSqlBytes = rs.getBytes(2);
-                String customSql = customSqlBytes != null ? new String(customSqlBytes) : null;
-                short searchType = rs.getShort(3);
-                SavedSearchData savedSearch = new SavedSearchData(name, customSql, searchType);
-                searches.add(savedSearch);
+            try (ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    String name = rs.getString(1);
+                    byte[] customSqlBytes = rs.getBytes(2);
+                    String customSql = customSqlBytes != null ? new String(customSqlBytes) : null;
+                    short searchType = rs.getShort(3);
+                    SavedSearchData savedSearch = new SavedSearchData(name, customSql, searchType);
+                    searches.add(savedSearch);
+                }
             }
         } catch (Throwable t) {
             LOGGER.log(Level.SEVERE, null, t);
             searches.clear();
-        } finally {
-            close(rs, stmt);
         }
         return searches;
     }
