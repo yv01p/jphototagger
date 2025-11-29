@@ -1658,6 +1658,20 @@ Ready for Phase 3: Java 21 upgrade."
 
 ---
 
+## Task 12: Extended Performance Benchmarks
+
+See `docs/plans/2025-11-29-phase2-performance-benchmarks.md` for additional benchmarks:
+
+- **ThumbnailCacheBenchmark** - Cache hit performance (single/concurrent)
+- **ThumbnailGenerationBenchmark** - Cache miss with image scaling
+- **FolderLoadBenchmark** - End-to-end folder loading (10/50/100 images)
+- **ExifCacheBenchmark** - EXIF cache read/write with XML serialization
+- **StartupBenchmark** - Application initialization phases
+
+These benchmarks establish baselines for Phase 6 optimization validation.
+
+---
+
 ## Summary
 
 Phase 2 establishes the testing foundation needed before risky migrations:
