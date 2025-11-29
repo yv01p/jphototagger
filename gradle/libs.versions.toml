@@ -1,6 +1,7 @@
 [versions]
 java = "21"
 hsqldb = "2.4.1"
+sqlite-jdbc = "3.45.1.0"
 metadata-extractor = "2.6.4"
 jgoodies-common = "1.6.0"
 jgoodies-looks = "2.5.3"
@@ -16,6 +17,7 @@ jmh = "1.37"
 
 [libraries]
 hsqldb = { module = "org.hsqldb:hsqldb", version.ref = "hsqldb" }
+sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "sqlite-jdbc" }
 metadata-extractor = { module = "com.drewnoakes:metadata-extractor", version.ref = "metadata-extractor" }
 jgoodies-common = { module = "com.jgoodies:jgoodies-common", version.ref = "jgoodies-common" }
 jgoodies-looks = { module = "com.jgoodies:jgoodies-looks", version.ref = "jgoodies-looks" }
