@@ -2,11 +2,13 @@ package org.jphototagger.program.app.ui;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * @author Elmar Baumann
  */
+@Ignore("GUI test requires display - cannot run in headless CI")
 public class SplashScreenTest {
     public SplashScreenTest() {}
 

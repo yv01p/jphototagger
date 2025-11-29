@@ -4,11 +4,13 @@ import org.jphototagger.lib.util.Version;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * @author Elmar Baumann
  */
+@Ignore("Requires local server at localhost - integration test")
 public class VersionCheckTest {
 
     public VersionCheckTest() {

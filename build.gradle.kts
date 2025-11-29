@@ -1,5 +1,6 @@
 plugins {
     java
+    `jvm-test-suite`
 }
 
 allprojects {
@@ -13,6 +14,7 @@ allprojects {
 
 subprojects {
     apply(plugin = "java")
+    apply(plugin = "jvm-test-suite")
 
     java {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -23,14 +25,11 @@ subprojects {
         options.encoding = "UTF-8"
     }
 
-    // Common test configuration - JUnit 5 with vintage engine for JUnit 4 compatibility
+    // Common test dependencies
     dependencies {
         // JUnit 5
         "testImplementation"(rootProject.libs.junit5.api)
-        "testRuntimeOnly"(rootProject.libs.junit5.engine)
         "testImplementation"(rootProject.libs.junit5.params)
-        // Vintage engine for existing JUnit 4 tests
-        "testRuntimeOnly"(rootProject.libs.junit5.vintage)
         // Legacy JUnit 4 (for existing tests during migration)
         "testImplementation"(rootProject.libs.junit4)
         "testImplementation"(rootProject.libs.hamcrest)
@@ -41,8 +40,21 @@ subprojects {
         "testImplementation"(rootProject.libs.mockito.junit5)
     }
 
+    // Configure the default test suite to use JUnit 5 with Vintage engine
+    @Suppress("UnstableApiUsage")
+    testing {
+        suites {
+            val test by getting(JvmTestSuite::class) {
+                useJUnitJupiter()
+                dependencies {
+                    // Vintage engine for existing JUnit 4 tests
+                    runtimeOnly(rootProject.libs.junit5.vintage)
+                }
+            }
+        }
+    }
+
     tasks.test {
-        useJUnitPlatform()
         testLogging {
             events("passed", "skipped", "failed")
             showStandardStreams = true
