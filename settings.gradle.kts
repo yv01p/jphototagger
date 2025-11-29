@@ -1,3 +1,10 @@
+// Auto-provisioning: Gradle will automatically download the required JDK if not installed.
+// Uses Foojay Disco API (https://github.com/foojayio/discoapi) to find and download JDKs.
+// This ensures all developers use the exact same JDK version without manual installation.
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+}
+
 rootProject.name = "jphototagger"
 
 // Enable version catalog
@@ -59,6 +66,8 @@ include("ExternalThumbnailCreationCommands:DefaultExternalThumbnailCreationComma
 
 // Tier 9: User services
 include("UserServices")
+
+include("Tools:MigrationTool")
 
 // Tier 10: Main application
 include("Program")
