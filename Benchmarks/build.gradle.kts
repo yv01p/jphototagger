@@ -24,8 +24,7 @@ dependencies {
     implementation(libs.hsqldb)
     implementation(libs.sqlite.jdbc)
 
-    // Local JARs needed for image/cache operations
-    implementation(files("../Libraries/mapdb.jar"))
+    // Local JARs needed for image operations
     implementation(files("../Libraries/ImgrRdr.jar"))
 }
 

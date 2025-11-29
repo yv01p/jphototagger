@@ -38,7 +38,7 @@ jmh-core = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
 jmh-generator = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
 
 # Local JARs (referenced as file dependencies in build.gradle.kts)
-# eventbus, swingx-core, beansbinding, ImgrRdr, org-openide-util-lookup, mapdb, XMPCore
+# eventbus, swingx-core, beansbinding, ImgrRdr, org-openide-util-lookup, XMPCore
 
 [bundles]
 junit5 = ["junit5-api", "junit5-engine", "junit5-params"]
