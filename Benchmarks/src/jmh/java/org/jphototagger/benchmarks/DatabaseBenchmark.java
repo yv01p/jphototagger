@@ -156,8 +156,11 @@ public class DatabaseBenchmark {
     @Benchmark
     public void insertKeyword(Blackhole bh) throws Exception {
         long id = System.nanoTime();
-        try (PreparedStatement stmt = connection.prepareStatement(
-                "INSERT INTO hierarchical_subjects VALUES (?, NULL, ?, TRUE)")) {
+        // Use database-specific boolean syntax: SQLite uses 1, HSQLDB uses TRUE
+        String insertSql = isSqlite
+                ? "INSERT INTO hierarchical_subjects VALUES (?, NULL, ?, 1)"
+                : "INSERT INTO hierarchical_subjects VALUES (?, NULL, ?, TRUE)";
+        try (PreparedStatement stmt = connection.prepareStatement(insertSql)) {
             stmt.setLong(1, id);
             stmt.setString(2, "NewKeyword" + id);
             bh.consume(stmt.executeUpdate());
