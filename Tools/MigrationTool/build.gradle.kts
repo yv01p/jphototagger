@@ -21,6 +21,7 @@ sourceSets {
 }
 
 dependencies {
+    implementation(project(":Repositories:SQLite"))
     implementation(libs.hsqldb)
     implementation(libs.sqlite.jdbc)
 
