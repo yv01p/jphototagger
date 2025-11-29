@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bushe.swing.event.EventBus;
 import org.jphototagger.api.applifecycle.AppWillInitEvent;
+import org.jphototagger.domain.repository.DatabaseBackend;
+import org.jphototagger.domain.repository.DatabaseBackendPreference;
 import org.jphototagger.domain.repository.Repository;
 import org.jphototagger.lib.awt.EventQueueUtil;
 import org.jphototagger.lib.swing.LongMessageDialog;
@@ -55,7 +57,7 @@ public final class AppInit {
             EventBus.publish(new AppWillInitEvent(this));
             CacheUtil.initCaches();
             SplashScreen.INSTANCE.setMessage(Bundle.getString(AppInit.class, "AppInit.Info.ConnectToRepository"));
-            Lookup.getDefault().lookup(Repository.class).init();
+            initRepository();
             SplashScreen.INSTANCE.setProgress(75);
             AbstractImageReader.install(ImageProperties.class);
             hideSplashScreen();
@@ -67,6 +69,33 @@ public final class AppInit {
             showErrorMessage(t);
             AppLifeCycle.quitBeforeGuiWasCreated();
         }
+    }
+
+    private void initRepository() {
+        DatabaseBackend backend = DatabaseBackendPreference.getPreference();
+        Logger logger = Logger.getLogger(AppInit.class.getName());
+        logger.log(Level.INFO, "Database backend preference: {0}", backend);
+
+        Repository repository = selectRepository(backend);
+        if (repository == null) {
+            throw new RuntimeException("No Repository implementation found for backend: " + backend);
+        }
+
+        logger.log(Level.INFO, "Initializing repository: {0}", repository.getClass().getName());
+        repository.init();
+    }
+
+    private Repository selectRepository(DatabaseBackend backend) {
+        for (Repository repo : Lookup.getDefault().lookupAll(Repository.class)) {
+            String className = repo.getClass().getName();
+            if (backend == DatabaseBackend.SQLITE && className.contains("Sqlite")) {
+                return repo;
+            } else if (backend == DatabaseBackend.HSQLDB && className.contains("hsqldb")) {
+                return repo;
+            }
+        }
+        // Fallback to default (first in lookup order)
+        return Lookup.getDefault().lookup(Repository.class);
     }
 
     private void hideSplashScreen() {
