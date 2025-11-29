@@ -7,6 +7,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include("API")
 include("Localization")
 include("TestSupport")
+include("Benchmarks")
 
 // Tier 1: Depends on Tier 0
 include("Resources")
