@@ -118,3 +118,15 @@
 /DeveloperSupport/scripts/JavaDeveloperSupport/nbproject/private/
 /DeveloperSupport/scripts/JavaDeveloperSupport/build/
 /DeveloperSupport/scripts/JavaDeveloperSupport/dist//gradle-8.5
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.project
+.classpath
+.settings/
