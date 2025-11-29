@@ -60,6 +60,9 @@ dependencies {
     implementation(files("../Libraries/mapdb.jar"))
     implementation(files("../Libraries/metadata-extractor.jar"))
     implementation(files("../Libraries/XMPCore.jar"))
+
+    // Test dependencies
+    testImplementation(project(":TestSupport"))
 }
 
 sourceSets {
@@ -86,5 +89,6 @@ tasks.jar {
 }
 
 tasks.test {
-    enabled = false  // TODO: Requires infrastructure setup - GUI environment, headless test setup
+    // Enable tests for new JUnit 5 tests (non-GUI tests)
+    useJUnitPlatform()
 }
