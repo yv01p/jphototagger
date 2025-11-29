@@ -160,17 +160,15 @@ class StringUtilTest {
         }
 
         @Test
-        @DisplayName("removes entire string when equal - has bug includes extra char")
+        @DisplayName("removes entire string when equal")
         void removesEntireString() {
-            // Note: Bug in implementation - includes one extra character
-            assertThat(StringUtil.removeLast("bla", "bla")).isEqualTo("b");
+            assertThat(StringUtil.removeLast("bla", "bla")).isEmpty();
         }
 
         @Test
-        @DisplayName("removes last occurrence - has bug includes extra char")
+        @DisplayName("removes last occurrence")
         void removesLastOccurrence() {
-            // Note: Bug in implementation - includes first char of removed substring
-            assertThat(StringUtil.removeLast("bla bla bla", "bla bla")).isEqualTo("bla b");
+            assertThat(StringUtil.removeLast("bla bla bla", "bla bla")).isEqualTo("bla ");
         }
 
         @Test
@@ -180,10 +178,9 @@ class StringUtilTest {
         }
 
         @Test
-        @DisplayName("removes from middle of string - has bug includes extra char")
+        @DisplayName("removes from middle of string")
         void removesFromMiddle() {
-            // Note: Bug in implementation - includes first char of removed substring
-            assertThat(StringUtil.removeLast("xyz bla xyz", "bla")).isEqualTo("xyz b xyz");
+            assertThat(StringUtil.removeLast("xyz bla xyz", "bla")).isEqualTo("xyz  xyz");
         }
     }
 }

@@ -404,7 +404,7 @@ public final class StringUtil {
         }
         int toRemoveLength = toRemove.length();
         int stringLength = string.length();
-        String begin = string.substring(0, lastIndex + 1);
+        String begin = string.substring(0, lastIndex);
         String end = lastIndex + toRemoveLength >= stringLength
                 ? ""
                 : string.substring(lastIndex + toRemoveLength, stringLength);
