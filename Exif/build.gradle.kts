@@ -15,6 +15,8 @@ dependencies {
     api(files("../Libraries/org-openide-util-lookup.jar"))
     api(files("../Libraries/eventbus.jar"))
     api(files("../Libraries/mapdb.jar"))
+
+    testImplementation(project(":TestSupport"))
 }
 
 sourceSets {
