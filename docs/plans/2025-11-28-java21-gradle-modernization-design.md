@@ -238,12 +238,28 @@ CREATE TABLE exif_cache (
 - **Modification time tracking** - invalidate when source file changes
 - **No migration needed** - caches rebuild automatically as user browses
 
+### Benchmark Checkpoint
+
+**Before starting Phase 5:**
+```bash
+./gradlew :Benchmarks:jmh -Pjmh.includes="ThumbnailCacheBenchmark|ExifCacheBenchmark"
+cp Benchmarks/build/reports/jmh/results.json docs/benchmarks/pre-phase5-cache.json
+```
+
+**After completing Phase 5:**
+```bash
+./gradlew :Benchmarks:jmh -Pjmh.includes="ThumbnailCacheBenchmark|ExifCacheBenchmark"
+# Compare results.json with pre-phase5-cache.json
+# SQLite should be equal or faster than MapDB
+```
+
 ### Deliverables
 
 - [ ] `ThumbnailsDb` reimplemented with SQLite
 - [ ] `ExifCache` reimplemented with SQLite
 - [ ] MapDB dependency removed
 - [ ] Cache rebuild tested and working
+- [ ] Cache benchmarks show no regression vs MapDB
 
 ## Phase 6: Performance Optimizations
 
@@ -280,12 +296,35 @@ CREATE TABLE exif_cache (
 -XX:+UseStringDeduplication
 ```
 
+### Benchmark Validation
+
+**Run full benchmark suite and compare to Phase 2 baseline:**
+```bash
+# Run all benchmarks
+./gradlew :Benchmarks:jmh
+./gradlew :Benchmarks:run > docs/benchmarks/phase6-startup.txt
+
+# Compare with baseline
+# docs/benchmarks/baseline-phase2.json (from Phase 2)
+# Benchmarks/build/reports/jmh/results.json (current)
+```
+
+**Expected improvements:**
+
+| Benchmark | Metric | Target |
+|-----------|--------|--------|
+| StartupBenchmark | total_ms | 30-50% faster (CDS + parallel init) |
+| FolderLoadBenchmark (cold, 100) | avg time | 2-4x faster (virtual threads) |
+| ThumbnailCacheBenchmark (concurrent) | throughput | 2-3x higher (virtual threads) |
+| DatabaseBenchmark | all queries | 10-20% faster (indexes + WAL) |
+
 ### Deliverables
 
 - [ ] Measurable startup time improvement (compare to Phase 2 baseline)
 - [ ] Faster folder browsing (compare to Phase 2 baseline)
 - [ ] Database indexes in place
 - [ ] Optimized JVM launch script
+- [ ] Benchmark comparison report showing improvements
 
 ## Dependency Changes
 
