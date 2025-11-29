@@ -10,6 +10,7 @@ application {
 dependencies {
     // All internal modules
     implementation(project(":API"))
+    implementation(project(":CacheDb"))
     implementation(project(":Domain"))
     implementation(project(":Exif"))
     implementation(project(":ExportersImporters:JPhotoTaggerExportersImporters"))
@@ -52,7 +53,6 @@ dependencies {
     implementation(files("../Libraries/beansbinding.jar"))
     implementation(files("../Libraries/eventbus.jar"))
     implementation(files("../Libraries/ImgrRdr.jar"))
-    implementation(files("../Libraries/mapdb.jar"))
     implementation(files("../Libraries/metadata-extractor.jar"))
     implementation(files("../Libraries/XMPCore.jar"))
 

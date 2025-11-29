@@ -2,141 +2,64 @@ package org.jphototagger.program.module.thumbnails.cache;
 
 import java.awt.Image;
 import java.io.File;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jphototagger.domain.thumbnails.ThumbnailsDirectoryProvider;
-import org.jphototagger.image.util.ImageUtil;
-import org.mapdb.DB;
-import org.mapdb.DBMaker;
+import org.jphototagger.api.storage.CacheDirectoryProvider;
+import org.jphototagger.cachedb.CacheDbInit;
+import org.jphototagger.cachedb.SqliteThumbnailCache;
 import org.openide.util.Lookup;
 
 /**
+ * SQLite-backed thumbnail database.
+ * Delegates to SqliteThumbnailCache.
+ *
  * @author Elmar Baumann
  */
 public final class ThumbnailsDb {
 
     private static final Logger LOGGER = Logger.getLogger(ThumbnailsDb.class.getName());
-    private static final DB THUMBNAILS_DB;
-    private static final Map<String, Thumbnail> THUMBNAILS;
+    private static final CacheDbInit CACHE_DB;
+    private static final SqliteThumbnailCache THUMBNAILS;
 
     static {
-        ThumbnailsDirectoryProvider provider = Lookup.getDefault().lookup(ThumbnailsDirectoryProvider.class);
-        File thumbnailsDirectory = provider.getThumbnailsDirectory();
-        String thumbnailsDir = thumbnailsDirectory.getAbsolutePath();
-        File thumbnailsFile = new File(thumbnailsDir + File.separator + "JPhotoTaggerTumbnailsDb");
-        LOGGER.log(Level.INFO, "Opening thumbnails database ''{0}''", thumbnailsFile);
-        THUMBNAILS_DB = DBMaker.newFileDB(thumbnailsFile)
-                .closeOnJvmShutdown()
-                .make();
-        THUMBNAILS = THUMBNAILS_DB.getHashMap("thumbnails");
+        CacheDirectoryProvider provider = Lookup.getDefault().lookup(CacheDirectoryProvider.class);
+        File cacheDirectory = provider.getCacheDirectory("ThumbnailCache");
+        LOGGER.log(Level.INFO, "Opening SQLite thumbnail cache in ''{0}''", cacheDirectory);
+        CACHE_DB = CacheDbInit.createForDirectory(cacheDirectory);
+        THUMBNAILS = CACHE_DB.getThumbnailCache();
     }
 
     static boolean existsThumbnail(File imageFile) {
-        try {
-            return THUMBNAILS.containsKey(createKey(imageFile));
-        } catch (Throwable t) {
-            Logger.getLogger(ThumbnailsDb.class.getName()).log(Level.SEVERE, null, t);
-            return false;
-        }
+        return THUMBNAILS.existsThumbnail(imageFile);
     }
 
     static Image findThumbnail(File imageFile) {
-        try {
-            Thumbnail thumbnail = THUMBNAILS.get(createKey(imageFile));
-            return thumbnail == null
-                    ? null
-                    : thumbnail.createImage();
-        } catch (Throwable t) {
-            Logger.getLogger(ThumbnailsDb.class.getName()).log(Level.SEVERE, null, t);
-            return null;
-        }
+        return THUMBNAILS.findThumbnail(imageFile);
     }
 
     static boolean deleteThumbnail(File imageFile) {
-        try {
-            LOGGER.log(Level.FINE, "Deleting thumbnail for image file {0}", imageFile);
-            if (THUMBNAILS.remove(createKey(imageFile)) != null) {
-                THUMBNAILS_DB.commit();
-            }
-            return true;
-        } catch (Throwable t) {
-            Logger.getLogger(ThumbnailsDb.class.getName()).log(Level.SEVERE, null, t);
-            rollback();
-            return false;
-        }
-    }
-
-    private static void rollback() {
-        try {
-            THUMBNAILS_DB.rollback();
-        } catch (Throwable t) {
-            Logger.getLogger(ThumbnailsDb.class.getName()).log(Level.SEVERE, null, t);
-        }
+        return THUMBNAILS.deleteThumbnail(imageFile);
     }
 
     static void insertThumbnail(Image thumbnail, File imageFile) {
-        byte[] imageBytes = ImageUtil.getByteArray(thumbnail, "jpeg");
-        if (imageBytes != null) {
-            LOGGER.log(Level.FINE, "Inserting thumbnail for image file {0}", imageFile);
-            Thumbnail tn = new Thumbnail(imageBytes, imageFile.length(), imageFile.lastModified());
-            THUMBNAILS.put(createKey(imageFile), tn);
-            try {
-                THUMBNAILS_DB.commit();
-            } catch (Throwable t) {
-                Logger.getLogger(ThumbnailsDb.class.getName()).log(Level.SEVERE, null, t);
-                rollback();
-            }
-        }
+        THUMBNAILS.insertThumbnail(thumbnail, imageFile);
     }
 
     static boolean hasUpToDateThumbnail(File imageFile) {
-        try {
-            Thumbnail thumbnail = THUMBNAILS.get(createKey(imageFile));
-            return thumbnail == null
-                    ? false
-                    : thumbnail.getImageFileLength() == imageFile.length()
-                        && thumbnail.getImageFileLastModified() == imageFile.lastModified();
-        } catch (Throwable t) {
-            Logger.getLogger(ThumbnailsDb.class.getName()).log(Level.SEVERE, null, t);
-            return false;
-        }
+        return THUMBNAILS.hasUpToDateThumbnail(imageFile);
     }
 
     static boolean renameThumbnail(File fromImageFile, File toImageFile) {
-        try {
-            Thumbnail tn = THUMBNAILS.get(createKey(fromImageFile));
-            if (tn != null) {
-                LOGGER.log(Level.FINE, "Renaming Thumbnail from image file ''{0}'' to image file {1}", new Object[]{fromImageFile, toImageFile});
-                THUMBNAILS.remove(createKey(fromImageFile));
-                THUMBNAILS.put(createKey(toImageFile), new Thumbnail(tn));
-                THUMBNAILS_DB.commit();
-                return true;
-            }
-            return false;
-        } catch (Throwable t) {
-            Logger.getLogger(ThumbnailsDb.class.getName()).log(Level.SEVERE, null, t);
-            rollback();
-            return false;
-        }
+        return THUMBNAILS.renameThumbnail(fromImageFile, toImageFile);
     }
 
     static Set<String> getImageFilenames() {
-        return THUMBNAILS.keySet();
+        return THUMBNAILS.getImageFilenames();
     }
 
     static void compact() {
-        try {
-            LOGGER.info("Compacting thumbnails database");
-            THUMBNAILS_DB.compact();
-        } catch (Throwable t) {
-            Logger.getLogger(ThumbnailsDb.class.getName()).log(Level.SEVERE, null, t);
-        }
-    }
-
-    private static String createKey(File imageFile) {
-        return imageFile.getAbsolutePath();
+        THUMBNAILS.compact();
     }
 
     private ThumbnailsDb() {
