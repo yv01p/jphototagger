@@ -16,9 +16,12 @@ subprojects {
     apply(plugin = "java")
     apply(plugin = "jvm-test-suite")
 
+    // Java toolchain ensures consistent JDK version across all environments.
+    // To upgrade to a newer Java version, change the number below (e.g., 22, 23).
     java {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
     }
 
     tasks.withType<JavaCompile>().configureEach {
