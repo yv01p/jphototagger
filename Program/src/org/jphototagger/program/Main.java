@@ -14,8 +14,8 @@ import org.jphototagger.program.app.AppInit;
  */
 public final class Main {
 
-    private static final int MIN_JAVA_MAJOR_VERSION = 1;
-    private static final int MIN_JAVA_MINOR_VERSION = 7;
+    // For Java 21+, we only need major version >= 21
+    private static final int MIN_JAVA_MAJOR_VERSION = 21;
 
     public static void main(String[] args) {
         if (checkJavaVersion()) {
@@ -28,36 +28,49 @@ public final class Main {
     private static boolean checkJavaVersion() {
         Logger logger = Logger.getLogger(Main.class.getName());
         logger.info("Checking Java version");
-        String version = System.getProperty("java.version"); //NOI18N
-        String[] versionToken = version.split("\\."); //NOI18N
-        if (versionToken.length < 2) {
-            logger.log(Level.SEVERE, "Can''t get valid Java Version! Got: ''{0}''", version); //NOI18N
-            return true;
-        }
-        int major;
-        int minor;
+        String version = System.getProperty("java.version");
+
         try {
-            major = Integer.parseInt(versionToken[0]);
-            minor = Integer.parseInt(versionToken[1]);
-            boolean tooOld = major < MIN_JAVA_MAJOR_VERSION || major == MIN_JAVA_MAJOR_VERSION && minor < MIN_JAVA_MINOR_VERSION;
-            if (tooOld) {
+            // Handle both "1.8.0_292" and "21.0.1" formats
+            String cleanVersion = version.split("[-+]")[0];
+            String[] parts = cleanVersion.split("[._]");
+
+            if (parts.length == 0) {
+                logger.log(Level.SEVERE, "Can''t get valid Java Version! Got: ''{0}''", version);
+                return true; // Allow to proceed on parse failure
+            }
+
+            int major = Integer.parseInt(parts[0]);
+
+            // For Java 9+, the major version is the first number (e.g., "21" -> 21)
+            // For Java 8 and earlier, format is "1.x" (e.g., "1.8" -> we check second number)
+            int effectiveMajor = (major == 1 && parts.length > 1)
+                ? Integer.parseInt(parts[1])
+                : major;
+
+            if (effectiveMajor < MIN_JAVA_MAJOR_VERSION) {
                 errorMessageJavaVersion(version);
                 return false;
             }
-        } catch (Throwable t) {
-            logger.log(Level.SEVERE, null, t);
+        } catch (NumberFormatException e) {
+            logger.log(Level.SEVERE, "Failed to parse Java version: " + version, e);
+            return true; // Allow to proceed on parse failure
         }
+
         return true;
     }
 
     private static void errorMessageJavaVersion(final String version) {
-        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Java version ''{0}'' is too old! The required minimum Java version is ''{1}.{2}''.", new Object[]{version, MIN_JAVA_MAJOR_VERSION, MIN_JAVA_MINOR_VERSION});
+        Logger.getLogger(Main.class.getName()).log(Level.SEVERE,
+            "Java version ''{0}'' is too old! The required minimum Java version is ''{1}''.",
+            new Object[]{version, MIN_JAVA_MAJOR_VERSION});
         EventQueue.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/jphototagger/program/Bundle");
-                String message = MessageFormat.format(bundle.getString("Main.Error.JavaVersion.Message"), version, MIN_JAVA_MAJOR_VERSION, MIN_JAVA_MINOR_VERSION);
+                String message = MessageFormat.format(
+                    "Java version {0} is too old. JPhotoTagger requires Java {1} or newer.",
+                    version, MIN_JAVA_MAJOR_VERSION);
                 String title = bundle.getString("Main.Error.JavaVersion.MessageTitle");
                 JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
             }

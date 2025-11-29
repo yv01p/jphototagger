@@ -16,22 +16,49 @@ public final class SystemUtil {
      * @return Version or null if not found
      */
     public static Version getJavaVersion() {
-        Version version = null;
         String versionProperty = System.getProperty("java.version");
-        StringTokenizer tok = new StringTokenizer(versionProperty, ".");
+        return parseJavaVersion(versionProperty);
+    }
 
-        if (tok.countTokens() >= 2) {
-            try {
-                int major = Integer.parseInt(tok.nextToken());
-                int minor = Integer.parseInt(tok.nextToken());
-
-                return new Version(major, minor);
-            } catch (Throwable t) {
-                Logger.getLogger(SystemUtil.class.getName()).log(Level.SEVERE, null, t);
-            }
+    /**
+     * Parses a Java version string into a Version object.
+     * Handles both pre-Java 9 format (1.7.0_80) and Java 9+ format (21.0.1).
+     *
+     * @param versionString the version string to parse
+     * @return Version or null if parsing fails
+     */
+    public static Version parseJavaVersion(String versionString) {
+        if (versionString == null || versionString.isEmpty()) {
+            return null;
         }
 
-        return version;
+        try {
+            // Remove any suffix like "-ea" or "+build"
+            String cleanVersion = versionString.split("[-+]")[0];
+
+            // Handle Java 9+ format: "21" or "21.0.1"
+            // Handle pre-Java 9 format: "1.8.0_292"
+            String[] parts = cleanVersion.split("[._]");
+
+            if (parts.length == 0) {
+                return null;
+            }
+
+            int major = Integer.parseInt(parts[0]);
+
+            // For pre-Java 9: "1.8.0" -> major=1, but we want major=8 semantically
+            // However, the existing code expects major=1, minor=8 for Java 8
+            // So we keep the literal parsing
+
+            int minor = parts.length > 1 ? Integer.parseInt(parts[1]) : 0;
+            int patch = parts.length > 2 ? Integer.parseInt(parts[2]) : 0;
+
+            return new Version(major, minor, patch);
+        } catch (NumberFormatException e) {
+            Logger.getLogger(SystemUtil.class.getName()).log(Level.SEVERE,
+                "Failed to parse Java version: " + versionString, e);
+            return null;
+        }
     }
 
     /**
