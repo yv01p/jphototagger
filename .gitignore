@@ -1,4 +1,5 @@
 *.diff
+*.class
 /API/build/
 /API/dist/
 /API/nbproject/private/
