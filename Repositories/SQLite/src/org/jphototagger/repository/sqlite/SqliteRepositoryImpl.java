@@ -19,7 +19,7 @@ import org.openide.util.lookup.ServiceProvider;
 public final class SqliteRepositoryImpl implements Repository {
 
     private static final Logger LOGGER = Logger.getLogger(SqliteRepositoryImpl.class.getName());
-    private static SqliteConnectionFactory connectionFactory;
+    private static volatile SqliteConnectionFactory connectionFactory;
     private volatile boolean initialized = false;
 
     @Override
@@ -53,6 +53,7 @@ public final class SqliteRepositoryImpl implements Repository {
     public synchronized void shutdown() {
         if (connectionFactory != null) {
             connectionFactory.close();
+            connectionFactory = null;
             initialized = false;
             LOGGER.info("SQLite repository shut down successfully");
         }
