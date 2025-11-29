@@ -87,8 +87,8 @@ public final class AppInit {
 
     private Repository selectRepository(DatabaseBackend backend) {
         for (Repository repo : Lookup.getDefault().lookupAll(Repository.class)) {
-            String className = repo.getClass().getName();
-            if (backend == DatabaseBackend.SQLITE && className.contains("Sqlite")) {
+            String className = repo.getClass().getName().toLowerCase();
+            if (backend == DatabaseBackend.SQLITE && className.contains("sqlite")) {
                 return repo;
             } else if (backend == DatabaseBackend.HSQLDB && className.contains("hsqldb")) {
                 return repo;
