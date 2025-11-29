@@ -10,6 +10,7 @@ dependencies {
     // Maven Central
     api(libs.jgoodies.common)
     api(libs.jgoodies.looks)
+    api(libs.flatlaf)
 
     // Local JARs
     api(files("../Libraries/org-openide-util-lookup.jar"))
