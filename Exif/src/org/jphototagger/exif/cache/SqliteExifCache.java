@@ -1,4 +1,4 @@
-package org.jphototagger.cachedb;
+package org.jphototagger.exif.cache;
 
 import java.io.File;
 import java.sql.Connection;
@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jphototagger.cachedb.CacheConnectionFactory;
+import org.jphototagger.cachedb.CacheDatabase;
 import org.jphototagger.exif.ExifTags;
 import org.jphototagger.lib.xml.bind.XmlObjectExporter;
 import org.jphototagger.lib.xml.bind.XmlObjectImporter;

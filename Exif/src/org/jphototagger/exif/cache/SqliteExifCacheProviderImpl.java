@@ -1,4 +1,4 @@
-package org.jphototagger.cachedb;
+package org.jphototagger.exif.cache;
 
 import org.jphototagger.domain.metadata.exif.ExifCacheProvider;
 

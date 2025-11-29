@@ -37,12 +37,6 @@ class CacheDbInitTest {
     }
 
     @Test
-    void getExifCache_returnsCache() {
-        SqliteExifCache cache = cacheDbInit.getExifCache();
-        assertThat(cache).isNotNull();
-    }
-
-    @Test
     void getCacheDbFile_returnsCorrectFile() {
         File cacheFile = cacheDbInit.getCacheDbFile();
         assertThat(cacheFile.getName()).isEqualTo("cache.db");

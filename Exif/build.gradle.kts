@@ -9,12 +9,12 @@ dependencies {
     api(project(":KML"))
     api(project(":Lib"))
     api(project(":Resources"))
+    implementation(project(":CacheDb"))
 
     // Local JARs
     api(files("../Libraries/metadata-extractor.jar"))
     api(files("../Libraries/org-openide-util-lookup.jar"))
     api(files("../Libraries/eventbus.jar"))
-    api(files("../Libraries/mapdb.jar"))
 
     testImplementation(project(":TestSupport"))
 }

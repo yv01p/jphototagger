@@ -23,13 +23,14 @@ dependencies {
     implementation(project(":API"))
     implementation(project(":Domain"))
     implementation(project(":Lib"))
-    implementation(project(":Exif"))
 
     implementation(libs.sqlite.jdbc)
 
     compileOnly(files("../Libraries/org-openide-util-lookup-8.6.jar"))
+    compileOnly(files("../Libraries/jakarta.xml.bind-api.jar"))
 
     testImplementation(project(":TestSupport"))
+    testImplementation(project(":Exif"))
     testImplementation(libs.bundles.junit5)
     testImplementation(libs.assertj)
     testRuntimeOnly(libs.junit5.engine)

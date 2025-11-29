@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 /**
  * Initializes the SQLite cache database.
- * Creates a single cache.db file containing both thumbnail and EXIF caches.
+ * Creates a single cache.db file containing thumbnail cache.
  */
 public final class CacheDbInit {
 
@@ -16,7 +16,6 @@ public final class CacheDbInit {
     private final File cacheDbFile;
     private final CacheConnectionFactory connectionFactory;
     private final SqliteThumbnailCache thumbnailCache;
-    private final SqliteExifCache exifCache;
 
     private CacheDbInit(File cacheDirectory) {
         this.cacheDbFile = new File(cacheDirectory, CACHE_DB_FILENAME);
@@ -24,7 +23,6 @@ public final class CacheDbInit {
 
         this.connectionFactory = new CacheConnectionFactory(cacheDbFile);
         this.thumbnailCache = new SqliteThumbnailCache(connectionFactory);
-        this.exifCache = new SqliteExifCache(connectionFactory);
     }
 
     /**
@@ -47,10 +45,6 @@ public final class CacheDbInit {
 
     public SqliteThumbnailCache getThumbnailCache() {
         return thumbnailCache;
-    }
-
-    public SqliteExifCache getExifCache() {
-        return exifCache;
     }
 
     public File getCacheDbFile() {

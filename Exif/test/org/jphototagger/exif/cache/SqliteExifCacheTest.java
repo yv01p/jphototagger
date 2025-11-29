@@ -1,9 +1,10 @@
-package org.jphototagger.cachedb;
+package org.jphototagger.exif.cache;
 
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import org.jphototagger.cachedb.CacheConnectionFactory;
 import org.jphototagger.exif.ExifIfd;
 import org.jphototagger.exif.ExifTag;
 import org.jphototagger.exif.ExifTags;

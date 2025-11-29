@@ -1,6 +1,7 @@
-package org.jphototagger.cachedb;
+package org.jphototagger.exif.cache;
 
 import java.io.File;
+import org.jphototagger.cachedb.CacheConnectionFactory;
 import org.jphototagger.domain.metadata.exif.ExifCacheProvider;
 import org.jphototagger.exif.ExifIfd;
 import org.jphototagger.exif.ExifTag;
