@@ -45,7 +45,6 @@ dependencies {
     implementation(libs.hsqldb)
     implementation(libs.jgoodies.common)
     implementation(libs.jgoodies.looks)
-    implementation(libs.lucene.core)
     implementation(libs.jaxb.api)
     implementation(libs.jaxb.core)
     implementation(libs.jaxb.impl)

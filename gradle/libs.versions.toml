@@ -4,7 +4,6 @@ hsqldb = "2.4.1"
 metadata-extractor = "2.6.4"
 jgoodies-common = "1.6.0"
 jgoodies-looks = "2.5.3"
-lucene = "3.4.0"
 jaxb-api = "2.2.11"
 jaxb-impl = "2.2.11"
 activation = "1.1.1"
@@ -23,7 +22,6 @@ hsqldb = { module = "org.hsqldb:hsqldb", version.ref = "hsqldb" }
 metadata-extractor = { module = "com.drewnoakes:metadata-extractor", version.ref = "metadata-extractor" }
 jgoodies-common = { module = "com.jgoodies:jgoodies-common", version.ref = "jgoodies-common" }
 jgoodies-looks = { module = "com.jgoodies:jgoodies-looks", version.ref = "jgoodies-looks" }
-lucene-core = { module = "org.apache.lucene:lucene-core", version.ref = "lucene" }
 jaxb-api = { module = "javax.xml.bind:jaxb-api", version.ref = "jaxb-api" }
 jaxb-core = { module = "com.sun.xml.bind:jaxb-core", version.ref = "jaxb-impl" }
 jaxb-impl = { module = "com.sun.xml.bind:jaxb-impl", version.ref = "jaxb-impl" }

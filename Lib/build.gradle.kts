@@ -7,7 +7,6 @@ dependencies {
     api(project(":Resources"))
 
     // Maven Central dependencies
-    api(libs.lucene.core)
     api(libs.jakarta.xml.bind.api)
     api(libs.jakarta.xml.bind.impl)
     api(libs.jakarta.activation)
