@@ -8,10 +8,9 @@ dependencies {
 
     // Maven Central dependencies
     api(libs.lucene.core)
-    api(libs.jaxb.api)
-    api(libs.jaxb.core)
-    api(libs.jaxb.impl)
-    api(libs.activation)
+    api(libs.jakarta.xml.bind.api)
+    api(libs.jakarta.xml.bind.impl)
+    api(libs.jakarta.activation)
 
     // Local JARs
     api(files("../Libraries/org-openide-util-lookup.jar"))
