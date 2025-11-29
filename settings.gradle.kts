@@ -26,6 +26,7 @@ include("KML")
 
 // Tier 4: Repository layer
 include("Repositories:HSQLDB")
+include("Repositories:SQLite")
 
 // Tier 5: Modules
 include("Modules:DisplayFilesWithoutMetaData")
