@@ -239,9 +239,9 @@ public final class KeywordsUtil {
                 KeywordsTreeModel model = ModelFactory.INSTANCE.getModel(KeywordsTreeModel.class);
                 DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
                 DefaultMutableTreeNode selNode = null;
-                for (Enumeration<DefaultMutableTreeNode> e = root.breadthFirstEnumeration();
+                for (Enumeration<?> e = root.breadthFirstEnumeration();
                         (selNode == null) && e.hasMoreElements();) {
-                    DefaultMutableTreeNode node = e.nextElement();
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
                     Object userObject = node.getUserObject();
 
                     if (userObject instanceof Keyword) {

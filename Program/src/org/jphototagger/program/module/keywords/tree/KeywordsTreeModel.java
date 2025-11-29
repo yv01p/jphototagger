@@ -135,8 +135,8 @@ public final class KeywordsTreeModel extends DefaultTreeModel {
             throw new NullPointerException("name == null");
         }
 
-        for (Enumeration<DefaultMutableTreeNode> e = parent.children(); e.hasMoreElements();) {
-            DefaultMutableTreeNode child = e.nextElement();
+        for (Enumeration<?> e = parent.children(); e.hasMoreElements();) {
+            DefaultMutableTreeNode child = (DefaultMutableTreeNode) e.nextElement();
             Object userObject = child.getUserObject();
 
             if (userObject instanceof Keyword) {
@@ -234,8 +234,8 @@ public final class KeywordsTreeModel extends DefaultTreeModel {
 
         DefaultMutableTreeNode newTarget = deepCopy(source, target);
 
-        for (Enumeration<DefaultMutableTreeNode> e = source.children(); e.hasMoreElements();) {
-            cpySubtree(e.nextElement(), newTarget);    // Recursive
+        for (Enumeration<?> e = source.children(); e.hasMoreElements();) {
+            cpySubtree((DefaultMutableTreeNode) e.nextElement(), newTarget);    // Recursive
         }
     }
 

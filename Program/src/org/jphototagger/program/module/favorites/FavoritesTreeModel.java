@@ -131,8 +131,8 @@ public final class FavoritesTreeModel extends DefaultTreeModel implements TreeWi
     @SuppressWarnings("unchecked")
     private void resetFavoriteIndices() {
         int newIndex = 0;
-        for (Enumeration<DefaultMutableTreeNode> children = rootNode.children(); children.hasMoreElements();) {
-            Object userObject = children.nextElement().getUserObject();
+        for (Enumeration<?> children = rootNode.children(); children.hasMoreElements();) {
+            Object userObject = ((DefaultMutableTreeNode) children.nextElement()).getUserObject();
             if (userObject instanceof Favorite) {
                 Favorite fav = (Favorite) userObject;
                 fav.setIndex(newIndex);
@@ -157,8 +157,8 @@ public final class FavoritesTreeModel extends DefaultTreeModel implements TreeWi
     @SuppressWarnings("unchecked")
     private void removeAllChildren(DefaultMutableTreeNode node) {
         List<DefaultMutableTreeNode> children = new ArrayList<>(node.getChildCount());
-        for (Enumeration<DefaultMutableTreeNode> e = node.children(); e.hasMoreElements();) {
-            children.add(e.nextElement());
+        for (Enumeration<?> e = node.children(); e.hasMoreElements();) {
+            children.add((DefaultMutableTreeNode) e.nextElement());
         }
         for (DefaultMutableTreeNode child : children) {
             removeNodeFromParent(child);    // notifies listeners
@@ -390,8 +390,8 @@ public final class FavoritesTreeModel extends DefaultTreeModel implements TreeWi
     @SuppressWarnings("unchecked")
     private synchronized int getNextNewFavoriteIndex() {
         int index = 0;
-        for (Enumeration<DefaultMutableTreeNode> children = rootNode.children(); children.hasMoreElements();) {
-            Object userObject = children.nextElement().getUserObject();
+        for (Enumeration<?> children = rootNode.children(); children.hasMoreElements();) {
+            Object userObject = ((DefaultMutableTreeNode) children.nextElement()).getUserObject();
             if (userObject instanceof Favorite) {
                 index++;
             }
@@ -401,8 +401,8 @@ public final class FavoritesTreeModel extends DefaultTreeModel implements TreeWi
 
     @SuppressWarnings("unchecked")
     private DefaultMutableTreeNode findNode(Favorite favorite) {
-        for (Enumeration<DefaultMutableTreeNode> children = rootNode.children(); children.hasMoreElements();) {
-            DefaultMutableTreeNode child = children.nextElement();
+        for (Enumeration<?> children = rootNode.children(); children.hasMoreElements();) {
+            DefaultMutableTreeNode child = (DefaultMutableTreeNode) children.nextElement();
             if (favorite.equals(child.getUserObject())) {
                 return child;
             }
@@ -502,8 +502,8 @@ public final class FavoritesTreeModel extends DefaultTreeModel implements TreeWi
 
     @SuppressWarnings("unchecked")
     private DefaultMutableTreeNode findFavorite(String name) {
-        for (Enumeration<DefaultMutableTreeNode> children = rootNode.children(); children.hasMoreElements();) {
-            DefaultMutableTreeNode childNode = children.nextElement();
+        for (Enumeration<?> children = rootNode.children(); children.hasMoreElements();) {
+            DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) children.nextElement();
             Object userObject = childNode.getUserObject();
             if (userObject instanceof Favorite) {
                 Favorite fav = (Favorite) userObject;
