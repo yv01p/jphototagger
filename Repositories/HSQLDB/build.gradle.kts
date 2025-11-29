@@ -16,6 +16,9 @@ dependencies {
     // Local JARs
     api(files("../../Libraries/org-openide-util-lookup.jar"))
     api(files("../../Libraries/eventbus.jar"))
+
+    // Test dependencies
+    testImplementation(project(":TestSupport"))
 }
 
 sourceSets {
