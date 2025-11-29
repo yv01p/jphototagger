@@ -1,0 +1,46 @@
+{
+  "database": "SQLite",
+  "date": "2025-11-29",
+  "javaVersion": "OpenJDK 21.0.9",
+  "jmhVersion": "1.37",
+  "configuration": {
+    "mode": "in-memory",
+    "walMode": true,
+    "synchronous": "NORMAL",
+    "foreignKeys": true
+  },
+  "benchmarks": {
+    "DatabaseBenchmark": {
+      "insertKeyword": {
+        "score": 18.913,
+        "error": 8.792,
+        "unit": "us/op",
+        "mode": "avgt"
+      },
+      "keywordExists": {
+        "score": 69.155,
+        "error": 4.479,
+        "unit": "us/op",
+        "mode": "avgt"
+      },
+      "selectAllKeywords": {
+        "score": 589.105,
+        "error": 180.757,
+        "unit": "us/op",
+        "mode": "avgt"
+      },
+      "selectChildKeywords": {
+        "score": 57.037,
+        "error": 5.030,
+        "unit": "us/op",
+        "mode": "avgt"
+      },
+      "selectRootKeywords": {
+        "score": 47.275,
+        "error": 3.476,
+        "unit": "us/op",
+        "mode": "avgt"
+      }
+    }
+  }
+}

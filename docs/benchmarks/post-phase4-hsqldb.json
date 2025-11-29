@@ -1,0 +1,43 @@
+{
+  "database": "HSQLDB",
+  "date": "2025-11-29",
+  "javaVersion": "OpenJDK 21.0.9",
+  "jmhVersion": "1.37",
+  "configuration": {
+    "mode": "in-memory"
+  },
+  "benchmarks": {
+    "DatabaseBenchmark": {
+      "insertKeyword": {
+        "score": 8.047,
+        "error": 0.255,
+        "unit": "us/op",
+        "mode": "avgt"
+      },
+      "keywordExists": {
+        "score": 78.013,
+        "error": 54.603,
+        "unit": "us/op",
+        "mode": "avgt"
+      },
+      "selectAllKeywords": {
+        "score": 90.659,
+        "error": 14.822,
+        "unit": "us/op",
+        "mode": "avgt"
+      },
+      "selectChildKeywords": {
+        "score": 62.838,
+        "error": 18.123,
+        "unit": "us/op",
+        "mode": "avgt"
+      },
+      "selectRootKeywords": {
+        "score": 49.141,
+        "error": 11.780,
+        "unit": "us/op",
+        "mode": "avgt"
+      }
+    }
+  }
+}

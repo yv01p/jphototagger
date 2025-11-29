@@ -16,11 +16,13 @@ dependencies {
     // Access to application code for benchmarking
     implementation(project(":Domain"))
     implementation(project(":Repositories:HSQLDB"))
+    implementation(project(":Repositories:SQLite"))
     implementation(project(":Exif"))
     implementation(project(":Image"))
     implementation(project(":Lib"))
     implementation(project(":TestSupport"))
     implementation(libs.hsqldb)
+    implementation(libs.sqlite.jdbc)
 
     // Local JARs needed for image/cache operations
     implementation(files("../Libraries/mapdb.jar"))
@@ -32,6 +34,10 @@ jmh {
     iterations.set(5)
     fork.set(1)
     jmhVersion.set("1.37")
+
+    // Pass database backend system property to forked JVM
+    val dbBackend = System.getProperty("jphototagger.database.backend", "hsqldb")
+    jvmArgs.add("-Djphototagger.database.backend=$dbBackend")
 
     // Output results to JSON for tracking
     resultFormat.set("JSON")

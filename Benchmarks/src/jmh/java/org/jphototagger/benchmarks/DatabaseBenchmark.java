@@ -14,6 +14,12 @@ import org.openjdk.jmh.infra.Blackhole;
  * Run before and after SQLite migration to compare performance.
  *
  * Results are saved to build/reports/jmh/results.json
+ *
+ * To run with HSQLDB (default):
+ *   ./gradlew :Benchmarks:jmh -Pjmh.includes="DatabaseBenchmark"
+ *
+ * To run with SQLite:
+ *   ./gradlew :Benchmarks:jmh -Pjmh.includes="DatabaseBenchmark" -Djphototagger.database.backend=sqlite
  */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
@@ -24,29 +30,64 @@ import org.openjdk.jmh.infra.Blackhole;
 public class DatabaseBenchmark {
 
     private Connection connection;
+    private String databaseBackend;
+    private boolean isSqlite;
 
     @Setup(Level.Trial)
     public void setup() throws Exception {
-        Class.forName("org.hsqldb.jdbcDriver");
-        connection = DriverManager.getConnection(
-                "jdbc:hsqldb:mem:benchmark;shutdown=true", "sa", "");
+        databaseBackend = System.getProperty("jphototagger.database.backend", "hsqldb");
+        isSqlite = "sqlite".equalsIgnoreCase(databaseBackend);
 
-        // Create schema
+        if (isSqlite) {
+            System.out.println("Running benchmark with SQLite backend");
+            Class.forName("org.sqlite.JDBC");
+            connection = DriverManager.getConnection("jdbc:sqlite::memory:");
+            // Configure SQLite for performance
+            try (Statement stmt = connection.createStatement()) {
+                stmt.execute("PRAGMA journal_mode=WAL");
+                stmt.execute("PRAGMA synchronous=NORMAL");
+                stmt.execute("PRAGMA foreign_keys=ON");
+            }
+        } else {
+            System.out.println("Running benchmark with HSQLDB backend");
+            Class.forName("org.hsqldb.jdbcDriver");
+            connection = DriverManager.getConnection(
+                    "jdbc:hsqldb:mem:benchmark;shutdown=true", "sa", "");
+        }
+
+        // Create schema (database-specific)
         try (Statement stmt = connection.createStatement()) {
-            stmt.execute(
-                "CREATE TABLE hierarchical_subjects (" +
-                "id BIGINT NOT NULL PRIMARY KEY, " +
-                "id_parent BIGINT, " +
-                "subject VARCHAR(256) NOT NULL, " +
-                "real BOOLEAN)");
+            if (isSqlite) {
+                stmt.execute(
+                    "CREATE TABLE hierarchical_subjects (" +
+                    "id INTEGER NOT NULL PRIMARY KEY, " +
+                    "id_parent INTEGER, " +
+                    "subject TEXT NOT NULL, " +
+                    "real INTEGER)");
+            } else {
+                stmt.execute(
+                    "CREATE TABLE hierarchical_subjects (" +
+                    "id BIGINT NOT NULL PRIMARY KEY, " +
+                    "id_parent BIGINT, " +
+                    "subject VARCHAR(256) NOT NULL, " +
+                    "real BOOLEAN)");
+            }
 
             // Insert test data - 1000 keywords
             for (int i = 0; i < 1000; i++) {
                 Long parentId = i > 0 ? (long) (i / 10) : null;
-                String sql = String.format(
-                    "INSERT INTO hierarchical_subjects VALUES (%d, %s, 'Keyword%d', TRUE)",
-                    i, parentId == null ? "NULL" : parentId.toString(), i);
-                stmt.execute(sql);
+                if (isSqlite) {
+                    // SQLite uses 1/0 for boolean
+                    String sql = String.format(
+                        "INSERT INTO hierarchical_subjects VALUES (%d, %s, 'Keyword%d', 1)",
+                        i, parentId == null ? "NULL" : parentId.toString(), i);
+                    stmt.execute(sql);
+                } else {
+                    String sql = String.format(
+                        "INSERT INTO hierarchical_subjects VALUES (%d, %s, 'Keyword%d', TRUE)",
+                        i, parentId == null ? "NULL" : parentId.toString(), i);
+                    stmt.execute(sql);
+                }
             }
         }
     }
@@ -54,7 +95,10 @@ public class DatabaseBenchmark {
     @TearDown(Level.Trial)
     public void teardown() throws Exception {
         if (connection != null) {
-            connection.createStatement().execute("SHUTDOWN");
+            if (!isSqlite) {
+                // HSQLDB needs SHUTDOWN command
+                connection.createStatement().execute("SHUTDOWN");
+            }
             connection.close();
         }
     }
