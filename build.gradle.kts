@@ -5,7 +5,7 @@ plugins {
 
 allprojects {
     group = "org.jphototagger"
-    version = "1.1.9"
+    version = "2.0.0"
 
     repositories {
         mavenCentral()
@@ -26,6 +26,11 @@ subprojects {
 
     tasks.withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
+    }
+
+    // NetBeans Lookup annotation processor for @ServiceProvider
+    dependencies {
+        "annotationProcessor"(files("${rootProject.projectDir}/Libraries/org-openide-util-lookup.jar"))
     }
 
     // Common test dependencies
