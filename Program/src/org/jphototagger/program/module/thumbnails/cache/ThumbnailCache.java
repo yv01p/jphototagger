@@ -25,12 +25,23 @@ public final class ThumbnailCache extends Cache<ThumbnailCacheIndirection> {
     public static final ThumbnailCache INSTANCE = new ThumbnailCache();
     private final Image noPreviewThumbnail = IconUtil.getIconImage(Bundle.getString(ThumbnailCache.class, "ThumbnailCache.Path.NoPreviewThumbnail"));
     private static final Logger LOGGER = Logger.getLogger(ThumbnailCache.class.getName());
+    private final VirtualThreadThumbnailFetcher virtualThreadFetcher;
 
     private ThumbnailCache() {
         listen();
+        // Use virtual thread pool for parallel fetching (Java 21)
+        virtualThreadFetcher = new VirtualThreadThumbnailFetcher(this::onThumbnailFetched);
+        // Start legacy single-threaded fetcher as fallback for work queue items
         ThumbnailFetcher thumbnailFetcher = new ThumbnailFetcher(workQueue, this);
         Thread thumbnailFetcherThread = new Thread(thumbnailFetcher, "JPhotoTagger: ThumbnailFetcher");
         thumbnailFetcherThread.start();
+    }
+
+    private void onThumbnailFetched(File imageFile) {
+        Image thumbnail = ThumbnailsDb.findThumbnail(imageFile);
+        if (thumbnail != null) {
+            update(thumbnail, imageFile);
+        }
     }
 
     private void listen() {
