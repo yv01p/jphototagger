@@ -874,9 +874,10 @@ java -XX:+UseZGC -jar Program/build/libs/Program.jar
 
 **Goal:** Create portable app-images for Linux, Windows, and macOS with GitHub Actions CI/CD.
 
-**Status:** Designed
+**Status:** ✅ COMPLETE
 
 **Design Document:** `docs/plans/2025-11-30-jpackage-distribution-design.md`
+**Implementation Plan:** `docs/plans/2025-11-30-jpackage-implementation.md`
 
 ### Key Decisions
 
@@ -887,43 +888,73 @@ java -XX:+UseZGC -jar Program/build/libs/Program.jar
 | Release trigger | Tag-based (`v*`) for official, manual dispatch for pre-release |
 | Version source | Git tag (starting at v2.0.0) |
 
-### Implementation
+### Deliverables
 
-| Component | Description |
-|-----------|-------------|
-| Gradle task | `jpackage` task in root `build.gradle.kts` |
-| CI workflow | `.github/workflows/release.yml` |
-| Documentation | `docs/building-distributions.md` |
+- [x] Gradle `jpackage` task
+- [x] GitHub Actions release workflow
+- [x] Build workflow updated to Java 21
+- [x] Build documentation
 
-### JVM Options
+### Phase 7 Completion Summary
+
+**Completed:** 2025-11-30
+
+#### Implementation Details
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Gradle `jpackage` task | ✅ | `build.gradle.kts` with OS auto-detection |
+| Release workflow | ✅ | `.github/workflows/release.yml` |
+| Build workflow | ✅ | Updated to Java 21 |
+| Documentation | ✅ | `docs/building-distributions.md` |
+| .gitignore | ✅ | jpackage output excluded |
+
+#### Files Created/Modified
+
+```
+build.gradle.kts                      # Added jpackage task (lines 80-158)
+.github/workflows/release.yml         # Multi-platform release workflow
+.github/workflows/build.yml           # Updated JDK 8 → 21
+docs/building-distributions.md        # Build and customization guide
+.gitignore                            # Added build/jpackage/
+```
+
+#### JVM Options
 
 ```
 -XX:+UseZGC -XX:+UseStringDeduplication -Xmx1g -Xms256m
 ```
 
-### Output
+#### Output
 
 - `JPhotoTagger-X.Y.Z-linux.zip`
 - `JPhotoTagger-X.Y.Z-windows.zip`
 - `JPhotoTagger-X.Y.Z-macos.zip`
 
-### Deliverables
+#### Verification Commands
 
-- [ ] Gradle `jpackage` task
-- [ ] GitHub Actions release workflow
-- [ ] Build documentation
+```bash
+# Build app-image locally
+./gradlew jpackage
 
-### Not Included (Documented How to Add)
+# Build with specific version
+./gradlew jpackage -Pversion=2.0.0
 
-- Native installers (`.deb`, `.msi`, `.dmg`)
-- Custom application icons
-- Bundled extras (manual, scripts)
+# Run the app-image (Linux)
+./build/jpackage/JPhotoTagger/bin/JPhotoTagger
+```
+
+#### Notes
+
+- Cross-compilation not supported; each platform must build its own app-image
+- Icons are optional; place in `packaging/` directory if needed
+- Native installers (`.deb`, `.msi`, `.dmg`) documented but not included by default
 
 ---
 
 ## Project Completion Summary
 
-**Status:** Phases 1-6 complete, Phase 7 designed
+**Status:** All 7 phases complete
 **Last Updated:** 2025-11-30
 
 ### Learnings
@@ -936,10 +967,10 @@ java -XX:+UseZGC -jar Program/build/libs/Program.jar
 
 ### Action Items & Next Steps
 
-1. **Distribution:** Implement Phase 7 (jpackage) - design complete
-2. **Documentation:** Update user documentation for SQLite migration
-3. **Migration tool:** Implement HSQLDB → SQLite data migration for existing users
-4. **Cleanup:** Remove legacy NetBeans Ant build files (nbproject/, build.xml)
+1. **Documentation:** Update user documentation for SQLite migration
+2. **Migration tool:** Implement HSQLDB → SQLite data migration for existing users
+3. **Cleanup:** Remove legacy NetBeans Ant build files (nbproject/, build.xml)
+4. **Release:** Tag v2.0.0 to trigger first GitHub Release with app-images
 
 ### Related Handoffs
 
