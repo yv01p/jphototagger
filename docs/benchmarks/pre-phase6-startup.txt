@@ -1,0 +1,68 @@
+Type-safe project accessors is an incubating feature.
+Path for java installation '/usr/lib/jvm/openjdk-21' (Common Linux Locations) does not contain a java executable
+> Task :API:compileJava UP-TO-DATE
+> Task :API:processResources NO-SOURCE
+> Task :API:classes UP-TO-DATE
+> Task :API:jar UP-TO-DATE
+> Task :Resources:compileJava UP-TO-DATE
+> Task :Lib:compileJava UP-TO-DATE
+> Task :Domain:compileJava UP-TO-DATE
+> Task :CacheDb:compileJava UP-TO-DATE
+> Task :Image:compileJava UP-TO-DATE
+> Task :KML:compileJava UP-TO-DATE
+> Task :Exif:compileJava UP-TO-DATE
+> Task :TestSupport:compileJava UP-TO-DATE
+> Task :XMP:compileJava UP-TO-DATE
+> Task :Repositories:HSQLDB:compileJava UP-TO-DATE
+> Task :Repositories:SQLite:compileJava UP-TO-DATE
+> Task :Benchmarks:compileJava UP-TO-DATE
+> Task :Benchmarks:processResources NO-SOURCE
+> Task :Benchmarks:classes UP-TO-DATE
+> Task :CacheDb:processResources UP-TO-DATE
+> Task :CacheDb:classes UP-TO-DATE
+> Task :CacheDb:jar UP-TO-DATE
+> Task :Domain:processResources UP-TO-DATE
+> Task :Domain:classes UP-TO-DATE
+> Task :Domain:jar UP-TO-DATE
+> Task :Exif:processResources UP-TO-DATE
+> Task :Exif:classes UP-TO-DATE
+> Task :Exif:jar UP-TO-DATE
+> Task :Image:processResources UP-TO-DATE
+> Task :Image:classes UP-TO-DATE
+> Task :Image:jar UP-TO-DATE
+> Task :KML:processResources UP-TO-DATE
+> Task :KML:classes UP-TO-DATE
+> Task :KML:jar UP-TO-DATE
+> Task :Lib:processResources UP-TO-DATE
+> Task :Lib:classes UP-TO-DATE
+> Task :Lib:jar UP-TO-DATE
+> Task :Resources:processResources UP-TO-DATE
+> Task :Resources:classes UP-TO-DATE
+> Task :Resources:jar UP-TO-DATE
+> Task :TestSupport:processResources NO-SOURCE
+> Task :TestSupport:classes UP-TO-DATE
+> Task :TestSupport:jar UP-TO-DATE
+> Task :XMP:processResources UP-TO-DATE
+> Task :XMP:classes UP-TO-DATE
+> Task :XMP:jar UP-TO-DATE
+> Task :Repositories:HSQLDB:processResources UP-TO-DATE
+> Task :Repositories:HSQLDB:classes UP-TO-DATE
+> Task :Repositories:HSQLDB:jar UP-TO-DATE
+> Task :Repositories:SQLite:processResources UP-TO-DATE
+> Task :Repositories:SQLite:classes UP-TO-DATE
+> Task :Repositories:SQLite:jar UP-TO-DATE
+
+> Task :Benchmarks:run
+JPhotoTagger Startup Benchmark
+==============================
+
+Phase 1 (Class Loading):       15.21 ms
+Phase 2 (JAXB Init):          290.79 ms
+Phase 3 (ImageIO Init):        29.09 ms
+------------------------------
+Total:                        335.10 ms
+
+{"class_loading_ms": 15.21, "jaxb_ms": 290.79, "imageio_ms": 29.09, "total_ms": 335.10}
+
+BUILD SUCCESSFUL in 1s
+36 actionable tasks: 1 executed, 35 up-to-date
