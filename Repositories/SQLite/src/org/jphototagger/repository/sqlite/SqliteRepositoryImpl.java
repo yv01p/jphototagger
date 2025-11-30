@@ -36,6 +36,10 @@ public final class SqliteRepositoryImpl implements Repository {
             SqliteTables tables = new SqliteTables(connectionFactory);
             tables.createTables();
 
+            // Create performance indexes
+            SqliteIndexes indexes = new SqliteIndexes(connectionFactory);
+            indexes.createPerformanceIndexes();
+
             initialized = true;
             LOGGER.info("SQLite repository initialized successfully at: " + dbFile.getAbsolutePath());
         } catch (SQLException e) {
