@@ -1,0 +1,1279 @@
+[
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.DatabaseBenchmark.insertKeyword",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 8.084668645889128,
+            "scoreError" : 0.4925616505981147,
+            "scoreConfidence" : [
+                7.592106995291013,
+                8.577230296487242
+            ],
+            "scorePercentiles" : {
+                "0.0" : 7.917718403407247,
+                "50.0" : 8.064526543677735,
+                "90.0" : 8.252852673009167,
+                "95.0" : 8.252852673009167,
+                "99.0" : 8.252852673009167,
+                "99.9" : 8.252852673009167,
+                "99.99" : 8.252852673009167,
+                "99.999" : 8.252852673009167,
+                "99.9999" : 8.252852673009167,
+                "100.0" : 8.252852673009167
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    8.160107681638314,
+                    7.917718403407247,
+                    8.252852673009167,
+                    8.064526543677735,
+                    8.028137927713164
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.DatabaseBenchmark.keywordExists",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 72.19461110235447,
+            "scoreError" : 37.245466566643955,
+            "scoreConfidence" : [
+                34.949144535710516,
+                109.44007766899843
+            ],
+            "scorePercentiles" : {
+                "0.0" : 64.88383113850146,
+                "50.0" : 65.3434898412491,
+                "90.0" : 84.20823899318124,
+                "95.0" : 84.20823899318124,
+                "99.0" : 84.20823899318124,
+                "99.9" : 84.20823899318124,
+                "99.99" : 84.20823899318124,
+                "99.999" : 84.20823899318124,
+                "99.9999" : 84.20823899318124,
+                "100.0" : 84.20823899318124
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    84.20823899318124,
+                    81.24405775322882,
+                    65.3434898412491,
+                    64.88383113850146,
+                    65.2934377856117
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.DatabaseBenchmark.selectAllKeywords",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 92.66931351073706,
+            "scoreError" : 16.75379408227393,
+            "scoreConfidence" : [
+                75.91551942846313,
+                109.42310759301098
+            ],
+            "scorePercentiles" : {
+                "0.0" : 89.14204572192513,
+                "50.0" : 91.08124321617191,
+                "90.0" : 100.15845223312638,
+                "95.0" : 100.15845223312638,
+                "99.0" : 100.15845223312638,
+                "99.9" : 100.15845223312638,
+                "99.99" : 100.15845223312638,
+                "99.999" : 100.15845223312638,
+                "99.9999" : 100.15845223312638,
+                "100.0" : 100.15845223312638
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    100.15845223312638,
+                    90.51978081447963,
+                    92.44504556798225,
+                    91.08124321617191,
+                    89.14204572192513
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.DatabaseBenchmark.selectChildKeywords",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 63.827126181952124,
+            "scoreError" : 15.772661388642145,
+            "scoreConfidence" : [
+                48.054464793309975,
+                79.59978757059427
+            ],
+            "scorePercentiles" : {
+                "0.0" : 58.58448067010309,
+                "50.0" : 65.22237274209326,
+                "90.0" : 68.06375671997279,
+                "95.0" : 68.06375671997279,
+                "99.0" : 68.06375671997279,
+                "99.9" : 68.06375671997279,
+                "99.99" : 68.06375671997279,
+                "99.999" : 68.06375671997279,
+                "99.9999" : 68.06375671997279,
+                "100.0" : 68.06375671997279
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    65.22237274209326,
+                    66.76744556438155,
+                    68.06375671997279,
+                    60.49757521320994,
+                    58.58448067010309
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.DatabaseBenchmark.selectRootKeywords",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 50.4700188274108,
+            "scoreError" : 12.652923642592627,
+            "scoreConfidence" : [
+                37.81709518481817,
+                63.12294247000342
+            ],
+            "scorePercentiles" : {
+                "0.0" : 47.27720935948948,
+                "50.0" : 50.06657180757872,
+                "90.0" : 54.08479949169956,
+                "95.0" : 54.08479949169956,
+                "99.0" : 54.08479949169956,
+                "99.9" : 54.08479949169956,
+                "99.99" : 54.08479949169956,
+                "99.999" : 54.08479949169956,
+                "99.9999" : 54.08479949169956,
+                "100.0" : 54.08479949169956
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    54.08479949169956,
+                    53.604446915697515,
+                    50.06657180757872,
+                    47.3170665625887,
+                    47.27720935948948
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.ExifCacheBenchmark.exifCache_containsUpToDate",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 275.782792338462,
+            "scoreError" : 34.25304666962423,
+            "scoreConfidence" : [
+                241.52974566883776,
+                310.0358390080862
+            ],
+            "scorePercentiles" : {
+                "0.0" : 261.24449647427525,
+                "50.0" : 280.6028443197756,
+                "90.0" : 283.02614827391056,
+                "95.0" : 283.02614827391056,
+                "99.0" : 283.02614827391056,
+                "99.9" : 283.02614827391056,
+                "99.99" : 283.02614827391056,
+                "99.999" : 283.02614827391056,
+                "99.9999" : 283.02614827391056,
+                "100.0" : 283.02614827391056
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    280.6028443197756,
+                    261.24449647427525,
+                    273.3877849139109,
+                    280.6526877104377,
+                    283.02614827391056
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.ExifCacheBenchmark.exifCache_read",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 901.9278253623386,
+            "scoreError" : 337.0559683364578,
+            "scoreConfidence" : [
+                564.8718570258808,
+                1238.9837936987965
+            ],
+            "scorePercentiles" : {
+                "0.0" : 757.8297098484849,
+                "50.0" : 911.1281001821494,
+                "90.0" : 989.7032680514342,
+                "95.0" : 989.7032680514342,
+                "99.0" : 989.7032680514342,
+                "99.9" : 989.7032680514342,
+                "99.99" : 989.7032680514342,
+                "99.999" : 989.7032680514342,
+                "99.9999" : 989.7032680514342,
+                "100.0" : 989.7032680514342
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    989.7032680514342,
+                    947.6696344696969,
+                    903.3084142599278,
+                    911.1281001821494,
+                    757.8297098484849
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.ExifCacheBenchmark.exifCache_read_concurrent",
+        "mode" : "avgt",
+        "threads" : 10,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 72392.2592251309,
+            "scoreError" : 497115.2699478011,
+            "scoreConfidence" : [
+                -424723.0107226702,
+                569507.529172932
+            ],
+            "scorePercentiles" : {
+                "0.0" : 9582.107462240718,
+                "50.0" : 19213.96528872758,
+                "90.0" : 303177.2600196719,
+                "95.0" : 303177.2600196719,
+                "99.0" : 303177.2600196719,
+                "99.9" : 303177.2600196719,
+                "99.99" : 303177.2600196719,
+                "99.999" : 303177.2600196719,
+                "99.9999" : 303177.2600196719,
+                "100.0" : 303177.2600196719
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    303177.2600196719,
+                    10379.583271659892,
+                    19608.380083354285,
+                    19213.96528872758,
+                    9582.107462240718
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.ExifCacheBenchmark.exifCache_write",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 896.689164420182,
+            "scoreError" : 251.1573917512857,
+            "scoreConfidence" : [
+                645.5317726688963,
+                1147.8465561714677
+            ],
+            "scorePercentiles" : {
+                "0.0" : 810.7964205834684,
+                "50.0" : 921.2834696132596,
+                "90.0" : 959.8805076775432,
+                "95.0" : 959.8805076775432,
+                "99.0" : 959.8805076775432,
+                "99.9" : 959.8805076775432,
+                "99.99" : 959.8805076775432,
+                "99.999" : 959.8805076775432,
+                "99.9999" : 959.8805076775432,
+                "100.0" : 959.8805076775432
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    959.8805076775432,
+                    945.9408468809073,
+                    921.2834696132596,
+                    845.5445773457312,
+                    810.7964205834684
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.FolderLoadBenchmark.folderLoad_coldCache",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "fileCount" : "10"
+        },
+        "primaryMetric" : {
+            "score" : 1633.920854257143,
+            "scoreError" : 41.24564148928973,
+            "scoreConfidence" : [
+                1592.6752127678533,
+                1675.1664957464327
+            ],
+            "scorePercentiles" : {
+                "0.0" : 1619.6055974285714,
+                "50.0" : 1635.1084558571429,
+                "90.0" : 1644.7141281428571,
+                "95.0" : 1644.7141281428571,
+                "99.0" : 1644.7141281428571,
+                "99.9" : 1644.7141281428571,
+                "99.99" : 1644.7141281428571,
+                "99.999" : 1644.7141281428571,
+                "99.9999" : 1644.7141281428571,
+                "100.0" : 1644.7141281428571
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    1643.2543387142857,
+                    1626.9217511428571,
+                    1619.6055974285714,
+                    1644.7141281428571,
+                    1635.1084558571429
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.FolderLoadBenchmark.folderLoad_coldCache",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "fileCount" : "50"
+        },
+        "primaryMetric" : {
+            "score" : 8003.8941521,
+            "scoreError" : 403.63129967678503,
+            "scoreConfidence" : [
+                7600.262852423215,
+                8407.525451776784
+            ],
+            "scorePercentiles" : {
+                "0.0" : 7906.127522,
+                "50.0" : 8009.889271,
+                "90.0" : 8165.564931,
+                "95.0" : 8165.564931,
+                "99.0" : 8165.564931,
+                "99.9" : 8165.564931,
+                "99.99" : 8165.564931,
+                "99.999" : 8165.564931,
+                "99.9999" : 8165.564931,
+                "100.0" : 8165.564931
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    8165.564931,
+                    8022.6835225,
+                    7906.127522,
+                    8009.889271,
+                    7915.205514
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.FolderLoadBenchmark.folderLoad_coldCache",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "fileCount" : "100"
+        },
+        "primaryMetric" : {
+            "score" : 16818.984164799997,
+            "scoreError" : 1048.5756986820788,
+            "scoreConfidence" : [
+                15770.408466117919,
+                17867.559863482074
+            ],
+            "scorePercentiles" : {
+                "0.0" : 16489.938267,
+                "50.0" : 16866.487394,
+                "90.0" : 17210.781756,
+                "95.0" : 17210.781756,
+                "99.0" : 17210.781756,
+                "99.9" : 17210.781756,
+                "99.99" : 17210.781756,
+                "99.999" : 17210.781756,
+                "99.9999" : 17210.781756,
+                "100.0" : 17210.781756
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    16489.938267,
+                    16878.97324,
+                    17210.781756,
+                    16648.740167,
+                    16866.487394
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.FolderLoadBenchmark.folderLoad_virtualThreads",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "fileCount" : "10"
+        },
+        "primaryMetric" : {
+            "score" : 243.70977624157953,
+            "scoreError" : 2.307624220258559,
+            "scoreConfidence" : [
+                241.40215202132097,
+                246.0174004618381
+            ],
+            "scorePercentiles" : {
+                "0.0" : 243.12107583333332,
+                "50.0" : 243.4091548095238,
+                "90.0" : 244.55139526829268,
+                "95.0" : 244.55139526829268,
+                "99.0" : 244.55139526829268,
+                "99.9" : 244.55139526829268,
+                "99.99" : 244.55139526829268,
+                "99.999" : 244.55139526829268,
+                "99.9999" : 244.55139526829268,
+                "100.0" : 244.55139526829268
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    243.35273583333333,
+                    244.55139526829268,
+                    243.4091548095238,
+                    243.12107583333332,
+                    244.11451946341464
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.FolderLoadBenchmark.folderLoad_virtualThreads",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "fileCount" : "50"
+        },
+        "primaryMetric" : {
+            "score" : 931.4204077636365,
+            "scoreError" : 33.41691813823595,
+            "scoreConfidence" : [
+                898.0034896254006,
+                964.8373259018724
+            ],
+            "scorePercentiles" : {
+                "0.0" : 920.4614085454546,
+                "50.0" : 930.6039272727272,
+                "90.0" : 943.8341916363636,
+                "95.0" : 943.8341916363636,
+                "99.0" : 943.8341916363636,
+                "99.9" : 943.8341916363636,
+                "99.99" : 943.8341916363636,
+                "99.999" : 943.8341916363636,
+                "99.9999" : 943.8341916363636,
+                "100.0" : 943.8341916363636
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    943.8341916363636,
+                    930.6039272727272,
+                    920.4614085454546,
+                    927.4834346363637,
+                    934.7190767272727
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.FolderLoadBenchmark.folderLoad_virtualThreads",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "fileCount" : "100"
+        },
+        "primaryMetric" : {
+            "score" : 1827.4671460666664,
+            "scoreError" : 77.61876742929643,
+            "scoreConfidence" : [
+                1749.84837863737,
+                1905.0859134959628
+            ],
+            "scorePercentiles" : {
+                "0.0" : 1806.633097,
+                "50.0" : 1828.6321971666666,
+                "90.0" : 1859.2694275,
+                "95.0" : 1859.2694275,
+                "99.0" : 1859.2694275,
+                "99.9" : 1859.2694275,
+                "99.99" : 1859.2694275,
+                "99.999" : 1859.2694275,
+                "99.9999" : 1859.2694275,
+                "100.0" : 1859.2694275
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    1814.159431,
+                    1828.6415776666668,
+                    1859.2694275,
+                    1828.6321971666666,
+                    1806.633097
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.FolderLoadBenchmark.folderLoad_warmCache",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "fileCount" : "10"
+        },
+        "primaryMetric" : {
+            "score" : 7.661588117826045,
+            "scoreError" : 0.5845469364237147,
+            "scoreConfidence" : [
+                7.07704118140233,
+                8.24613505424976
+            ],
+            "scorePercentiles" : {
+                "0.0" : 7.4579278471290085,
+                "50.0" : 7.649589804281345,
+                "90.0" : 7.837550142633229,
+                "95.0" : 7.837550142633229,
+                "99.0" : 7.837550142633229,
+                "99.9" : 7.837550142633229,
+                "99.99" : 7.837550142633229,
+                "99.999" : 7.837550142633229,
+                "99.9999" : 7.837550142633229,
+                "100.0" : 7.837550142633229
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    7.4579278471290085,
+                    7.778408052099533,
+                    7.837550142633229,
+                    7.649589804281345,
+                    7.5844647429871115
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.FolderLoadBenchmark.folderLoad_warmCache",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "fileCount" : "50"
+        },
+        "primaryMetric" : {
+            "score" : 40.107684952668535,
+            "scoreError" : 1.0119859282346668,
+            "scoreConfidence" : [
+                39.09569902443387,
+                41.1196708809032
+            ],
+            "scorePercentiles" : {
+                "0.0" : 39.84570597211155,
+                "50.0" : 40.116161864,
+                "90.0" : 40.526700562753035,
+                "95.0" : 40.526700562753035,
+                "99.0" : 40.526700562753035,
+                "99.9" : 40.526700562753035,
+                "99.99" : 40.526700562753035,
+                "99.999" : 40.526700562753035,
+                "99.9999" : 40.526700562753035,
+                "100.0" : 40.526700562753035
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    40.116161864,
+                    40.526700562753035,
+                    40.120581484,
+                    39.84570597211155,
+                    39.92927488047809
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.FolderLoadBenchmark.folderLoad_warmCache",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "10 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "10 s",
+        "measurementBatchSize" : 1,
+        "params" : {
+            "fileCount" : "100"
+        },
+        "primaryMetric" : {
+            "score" : 72.87672759338732,
+            "scoreError" : 3.003236186360244,
+            "scoreConfidence" : [
+                69.87349140702707,
+                75.87996377974756
+            ],
+            "scorePercentiles" : {
+                "0.0" : 72.34407170503597,
+                "50.0" : 72.5879996884058,
+                "90.0" : 74.23025214814815,
+                "95.0" : 74.23025214814815,
+                "99.0" : 74.23025214814815,
+                "99.9" : 74.23025214814815,
+                "99.99" : 74.23025214814815,
+                "99.999" : 74.23025214814815,
+                "99.9999" : 74.23025214814815,
+                "100.0" : 74.23025214814815
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    74.23025214814815,
+                    72.34407170503597,
+                    72.39563730215828,
+                    72.5879996884058,
+                    72.8256771231884
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.ThumbnailCacheBenchmark.cacheExists_single",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 266.22771825917,
+            "scoreError" : 3.491329073214778,
+            "scoreConfidence" : [
+                262.7363891859552,
+                269.7190473323848
+            ],
+            "scorePercentiles" : {
+                "0.0" : 265.51412871549894,
+                "50.0" : 265.94619914916245,
+                "90.0" : 267.7327869379015,
+                "95.0" : 267.7327869379015,
+                "99.0" : 267.7327869379015,
+                "99.9" : 267.7327869379015,
+                "99.99" : 267.7327869379015,
+                "99.999" : 267.7327869379015,
+                "99.9999" : 267.7327869379015,
+                "100.0" : 267.7327869379015
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    265.94619914916245,
+                    265.51412871549894,
+                    265.5824810193788,
+                    266.3629954739084,
+                    267.7327869379015
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.ThumbnailCacheBenchmark.cacheHit_concurrent",
+        "mode" : "avgt",
+        "threads" : 10,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 1832.1361824573244,
+            "scoreError" : 174.19908444349073,
+            "scoreConfidence" : [
+                1657.9370980138337,
+                2006.335266900815
+            ],
+            "scorePercentiles" : {
+                "0.0" : 1765.343112427668,
+                "50.0" : 1834.737681381996,
+                "90.0" : 1887.2087710423693,
+                "95.0" : 1887.2087710423693,
+                "99.0" : 1887.2087710423693,
+                "99.9" : 1887.2087710423693,
+                "99.99" : 1887.2087710423693,
+                "99.999" : 1887.2087710423693,
+                "99.9999" : 1887.2087710423693,
+                "100.0" : 1887.2087710423693
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    1854.634459973863,
+                    1818.756887460726,
+                    1765.343112427668,
+                    1887.2087710423693,
+                    1834.737681381996
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.ThumbnailCacheBenchmark.cacheHit_single",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 519.918800832332,
+            "scoreError" : 55.27958567214749,
+            "scoreConfidence" : [
+                464.63921516018445,
+                575.1983865044795
+            ],
+            "scorePercentiles" : {
+                "0.0" : 507.7002502538071,
+                "50.0" : 510.70798774885145,
+                "90.0" : 538.3996162540366,
+                "95.0" : 538.3996162540366,
+                "99.0" : 538.3996162540366,
+                "99.9" : 538.3996162540366,
+                "99.99" : 538.3996162540366,
+                "99.999" : 538.3996162540366,
+                "99.9999" : 538.3996162540366,
+                "100.0" : 538.3996162540366
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    538.3996162540366,
+                    532.4463927621075,
+                    510.70798774885145,
+                    510.33975714285714,
+                    507.7002502538071
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.ThumbnailCacheBenchmark.cacheUpToDate_single",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 282.3982957070206,
+            "scoreError" : 16.99625745173976,
+            "scoreConfidence" : [
+                265.40203825528084,
+                299.3945531587604
+            ],
+            "scorePercentiles" : {
+                "0.0" : 279.8492985450476,
+                "50.0" : 280.2675654244887,
+                "90.0" : 290.15725529445893,
+                "95.0" : 290.15725529445893,
+                "99.0" : 290.15725529445893,
+                "99.9" : 290.15725529445893,
+                "99.99" : 290.15725529445893,
+                "99.999" : 290.15725529445893,
+                "99.9999" : 290.15725529445893,
+                "100.0" : 290.15725529445893
+            },
+            "scoreUnit" : "us/op",
+            "rawData" : [
+                [
+                    279.8492985450476,
+                    281.8459613975768,
+                    290.15725529445893,
+                    280.2675654244887,
+                    279.87139787353107
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.ThumbnailGenerationBenchmark.generateAndStore",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "2 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "2 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 175.0688568,
+            "scoreError" : 3.4368100952393097,
+            "scoreConfidence" : [
+                171.63204670476068,
+                178.5056668952393
+            ],
+            "scorePercentiles" : {
+                "0.0" : 173.5151935,
+                "50.0" : 175.3578305,
+                "90.0" : 175.69729691666666,
+                "95.0" : 175.69729691666666,
+                "99.0" : 175.69729691666666,
+                "99.9" : 175.69729691666666,
+                "99.99" : 175.69729691666666,
+                "99.999" : 175.69729691666666,
+                "99.9999" : 175.69729691666666,
+                "100.0" : 175.69729691666666
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    175.69729691666666,
+                    175.60112,
+                    175.3578305,
+                    175.17284308333333,
+                    173.5151935
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "org.jphototagger.benchmarks.ThumbnailGenerationBenchmark.generateThumbnail",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        "jvmArgs" : [
+            "-Djphototagger.database.backend=hsqldb"
+        ],
+        "jdkVersion" : "21.0.9",
+        "vmName" : "OpenJDK 64-Bit Server VM",
+        "vmVersion" : "21.0.9+10-Ubuntu-125.10",
+        "warmupIterations" : 2,
+        "warmupTime" : "2 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 5,
+        "measurementTime" : "2 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 168.0735277653846,
+            "scoreError" : 6.444767633396055,
+            "scoreConfidence" : [
+                161.62876013198854,
+                174.51829539878065
+            ],
+            "scorePercentiles" : {
+                "0.0" : 165.45589807692306,
+                "50.0" : 168.21432866666666,
+                "90.0" : 169.99443641666667,
+                "95.0" : 169.99443641666667,
+                "99.0" : 169.99443641666667,
+                "99.9" : 169.99443641666667,
+                "99.99" : 169.99443641666667,
+                "99.999" : 169.99443641666667,
+                "99.9999" : 169.99443641666667,
+                "100.0" : 169.99443641666667
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    168.84579108333332,
+                    169.99443641666667,
+                    165.45589807692306,
+                    168.21432866666666,
+                    167.85718458333332
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    }
+]
+
+
