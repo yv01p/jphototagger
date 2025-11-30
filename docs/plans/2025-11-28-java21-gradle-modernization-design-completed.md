@@ -261,6 +261,51 @@ sample-images/
 - [ ] Baseline measurements saved to `docs/benchmarks/`
 - [ ] CI running all tests with coverage reporting
 
+### Phase 2 Test Results
+
+**Startup Benchmark** (from `docs/benchmarks/startup-baseline.txt`):
+
+| Phase | Time |
+|-------|------|
+| Class Loading | 13.84 ms |
+| JAXB Init | 274.31 ms |
+| ImageIO Init | 30.95 ms |
+| **Total** | **319.10 ms** |
+
+**JMH Benchmarks** (from `docs/benchmarks/baseline-phase2.json`):
+
+| Benchmark | Score | Unit |
+|-----------|-------|------|
+| **Database** | | |
+| insertKeyword | 8.21 | μs/op |
+| keywordExists | 69.77 | μs/op |
+| selectAllKeywords | 90.62 | μs/op |
+| selectChildKeywords | 62.41 | μs/op |
+| selectRootKeywords | 49.20 | μs/op |
+| **EXIF Cache** | | |
+| exifCache_containsUpToDate | 410.12 | μs/op |
+| exifCache_read | 423.03 | μs/op |
+| exifCache_read_concurrent (10 threads) | 648.82 | μs/op |
+| exifCache_write | 235.68 | μs/op |
+| **Thumbnail Cache** | | |
+| cacheExists_single | 0.02 | μs/op |
+| cacheHit_single | 246.70 | μs/op |
+| cacheHit_concurrent (10 threads) | 383.86 | μs/op |
+| cacheUpToDate_single | 0.02 | μs/op |
+| **Thumbnail Generation** | | |
+| generateThumbnail | 170.33 | ms/op |
+| generateAndStore | 169.93 | ms/op |
+| **Folder Load (Cold Cache)** | | |
+| 10 files | 1,637.70 | ms/op |
+| 50 files | 8,188.18 | ms/op |
+| 100 files | 16,638.39 | ms/op |
+| **Folder Load (Warm Cache)** | | |
+| 10 files | 2.84 | ms/op |
+| 50 files | 65.34 | ms/op |
+| 100 files | 16,655.85 | ms/op |
+
+**Environment:** Java 21.0.9 (OpenJDK 64-Bit Server VM), JMH 1.37
+
 ## Phase 3: Java 21 Upgrade + UI Compatibility
 
 **Goal:** Upgrade to Java 21, handle library migrations, resolve UI compatibility.
