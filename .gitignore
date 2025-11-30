@@ -131,3 +131,6 @@ build/
 .project
 .classpath
 .settings/
+
+# jpackage output
+build/jpackage/
