@@ -3,63 +3,48 @@ package org.jphototagger.benchmarks;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
-import javax.imageio.ImageIO;
+import java.nio.file.Files;
+import org.jphototagger.cachedb.CacheConnectionFactory;
+import org.jphototagger.cachedb.SqliteThumbnailCache;
 
 /**
- * Test harness for thumbnail cache benchmarking.
- * Simulates ThumbnailsDb behavior without requiring MapDB initialization.
+ * Test harness for thumbnail cache benchmarking using SQLite backend.
  */
 public final class ThumbnailCacheTestHarness {
 
-    private final Map<String, ThumbnailEntry> cache = new HashMap<>();
+    private final File tempDir;
+    private final CacheConnectionFactory factory;
+    private final SqliteThumbnailCache cache;
     private File[] storedFiles;
 
-    private static class ThumbnailEntry {
-        final byte[] imageBytes;
-        final long fileLength;
-        final long lastModified;
+    private ThumbnailCacheTestHarness(File tempDir) {
+        this.tempDir = tempDir;
+        File dbFile = new File(tempDir, "benchmark-cache.db");
+        this.factory = new CacheConnectionFactory(dbFile);
+        this.cache = new SqliteThumbnailCache(factory);
+    }
 
-        ThumbnailEntry(byte[] imageBytes, long fileLength, long lastModified) {
-            this.imageBytes = imageBytes;
-            this.fileLength = fileLength;
-            this.lastModified = lastModified;
+    public static ThumbnailCacheTestHarness createEmpty() {
+        try {
+            File tempDir = Files.createTempDirectory("thumbnail-benchmark").toFile();
+            return new ThumbnailCacheTestHarness(tempDir);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private ThumbnailCacheTestHarness() {
-    }
-
-    /**
-     * Creates an empty cache for testing inserts.
-     */
-    public static ThumbnailCacheTestHarness createEmpty() {
-        return new ThumbnailCacheTestHarness();
-    }
-
-    /**
-     * Creates a cache pre-populated with sample thumbnails.
-     */
     public static ThumbnailCacheTestHarness createWithSampleData(int count) {
-        ThumbnailCacheTestHarness harness = new ThumbnailCacheTestHarness();
+        ThumbnailCacheTestHarness harness = createEmpty();
         harness.storedFiles = new File[count];
 
-        // Generate fake thumbnails (small colored rectangles)
         for (int i = 0; i < count; i++) {
             File file = new File("/photos/image_" + i + ".jpg");
             harness.storedFiles[i] = file;
 
             BufferedImage thumbnail = createSampleThumbnail(i);
-            byte[] bytes = imageToBytes(thumbnail);
-
-            harness.cache.put(file.getAbsolutePath(),
-                    new ThumbnailEntry(bytes, 1024 * (i + 1), System.currentTimeMillis()));
+            harness.cache.insertThumbnail(thumbnail, file);
         }
 
         return harness;
@@ -68,21 +53,10 @@ public final class ThumbnailCacheTestHarness {
     private static BufferedImage createSampleThumbnail(int seed) {
         BufferedImage img = new BufferedImage(150, 150, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = img.createGraphics();
-        // Different color per thumbnail
         g.setColor(new java.awt.Color(seed % 256, (seed * 7) % 256, (seed * 13) % 256));
         g.fillRect(0, 0, 150, 150);
         g.dispose();
         return img;
-    }
-
-    private static byte[] imageToBytes(BufferedImage image) {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(image, "jpeg", baos);
-            return baos.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public File[] getStoredFiles() {
@@ -90,55 +64,39 @@ public final class ThumbnailCacheTestHarness {
     }
 
     public boolean existsThumbnail(File imageFile) {
-        return cache.containsKey(imageFile.getAbsolutePath());
+        return cache.existsThumbnail(imageFile);
     }
 
     public Image findThumbnail(File imageFile) {
-        ThumbnailEntry entry = cache.get(imageFile.getAbsolutePath());
-        if (entry == null) {
-            return null;
-        }
-        try {
-            return ImageIO.read(new ByteArrayInputStream(entry.imageBytes));
-        } catch (IOException e) {
-            return null;
-        }
+        return cache.findThumbnail(imageFile);
     }
 
     public boolean hasUpToDateThumbnail(File imageFile) {
-        ThumbnailEntry entry = cache.get(imageFile.getAbsolutePath());
-        if (entry == null) {
-            return false;
-        }
-        // In real code, compares with file.length() and file.lastModified()
-        // Here we just check existence
-        return true;
+        return cache.hasUpToDateThumbnail(imageFile);
     }
 
     public void insertThumbnail(Image thumbnail, File imageFile) {
-        BufferedImage buffered;
-        if (thumbnail instanceof BufferedImage) {
-            buffered = (BufferedImage) thumbnail;
-        } else {
-            buffered = new BufferedImage(
-                    thumbnail.getWidth(null),
-                    thumbnail.getHeight(null),
-                    BufferedImage.TYPE_INT_RGB);
-            Graphics2D g = buffered.createGraphics();
-            g.drawImage(thumbnail, 0, 0, null);
-            g.dispose();
-        }
-
-        byte[] bytes = imageToBytes(buffered);
-        cache.put(imageFile.getAbsolutePath(),
-                new ThumbnailEntry(bytes, imageFile.length(), imageFile.lastModified()));
+        cache.insertThumbnail(thumbnail, imageFile);
     }
 
     public void clear() {
-        cache.clear();
+        // No-op for SQLite - drop table would be too expensive per benchmark
     }
 
     public void close() {
-        cache.clear();
+        factory.close();
+        deleteRecursively(tempDir);
+    }
+
+    private static void deleteRecursively(File file) {
+        if (file.isDirectory()) {
+            File[] children = file.listFiles();
+            if (children != null) {
+                for (File child : children) {
+                    deleteRecursively(child);
+                }
+            }
+        }
+        file.delete();
     }
 }

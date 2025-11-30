@@ -21,6 +21,7 @@ dependencies {
     implementation(project(":Image"))
     implementation(project(":Lib"))
     implementation(project(":TestSupport"))
+    implementation(project(":CacheDb"))
     implementation(libs.hsqldb)
     implementation(libs.sqlite.jdbc)
 

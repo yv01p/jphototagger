@@ -1,85 +1,58 @@
 package org.jphototagger.benchmarks;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.nio.file.Files;
+import org.jphototagger.cachedb.CacheConnectionFactory;
+import org.jphototagger.exif.cache.SqliteExifCache;
 import org.jphototagger.exif.ExifIfd;
 import org.jphototagger.exif.ExifTag;
 import org.jphototagger.exif.ExifTags;
-import org.jphototagger.lib.xml.bind.XmlObjectExporter;
-import org.jphototagger.lib.xml.bind.XmlObjectImporter;
 
 /**
- * Test harness for EXIF cache benchmarking.
- * Simulates ExifCache behavior without requiring MapDB initialization.
+ * Test harness for EXIF cache benchmarking using SQLite backend.
  */
 public final class ExifCacheTestHarness {
 
-    private final Map<String, String> cache = new HashMap<>();
+    private final File tempDir;
+    private final CacheConnectionFactory factory;
+    private final SqliteExifCache cache;
 
-    private ExifCacheTestHarness() {
+    private ExifCacheTestHarness(File tempDir) {
+        this.tempDir = tempDir;
+        File dbFile = new File(tempDir, "benchmark-exif-cache.db");
+        this.factory = new CacheConnectionFactory(dbFile);
+        this.cache = new SqliteExifCache(factory);
     }
 
-    /**
-     * Creates an empty EXIF cache for testing.
-     */
     public static ExifCacheTestHarness create() {
-        return new ExifCacheTestHarness();
+        try {
+            File tempDir = Files.createTempDirectory("exif-benchmark").toFile();
+            return new ExifCacheTestHarness(tempDir);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    /**
-     * Generates sample ExifTags objects for testing.
-     */
     public static ExifTags[] generateSampleTags(int count) {
         ExifTags[] tags = new ExifTags[count];
         for (int i = 0; i < count; i++) {
             ExifTags exifTags = new ExifTags();
             exifTags.setLastModified(System.currentTimeMillis() - i * 1000);
 
-            // Create Make tag (tag ID 271)
             String makeValue = "Camera" + (i % 5);
             ExifTag makeTag = new ExifTag(
-                271,  // tagId
-                2,    // ASCII type
-                makeValue.length() + 1,  // valueCount (string length + null terminator)
-                0,    // valueOffset
-                makeValue.getBytes(),  // rawValue
-                makeValue,  // stringValue
-                18761,  // little endian
-                "Make",  // name
-                ExifIfd.EXIF
+                271, 2, makeValue.length() + 1, 0,
+                makeValue.getBytes(), makeValue, 18761, "Make", ExifIfd.EXIF
             );
             exifTags.addExifTag(makeTag);
 
-            // Create Model tag (tag ID 272)
             String modelValue = "Model" + i;
             ExifTag modelTag = new ExifTag(
-                272,  // tagId
-                2,    // ASCII type
-                modelValue.length() + 1,  // valueCount
-                0,    // valueOffset
-                modelValue.getBytes(),  // rawValue
-                modelValue,  // stringValue
-                18761,  // little endian
-                "Model",  // name
-                ExifIfd.EXIF
+                272, 2, modelValue.length() + 1, 0,
+                modelValue.getBytes(), modelValue, 18761, "Model", ExifIfd.EXIF
             );
             exifTags.addExifTag(modelTag);
-
-            // Create ISO tag (tag ID 34855)
-            String isoValue = String.valueOf(100 * (i % 32 + 1));
-            ExifTag isoTag = new ExifTag(
-                34855,  // tagId
-                3,      // SHORT type
-                1,      // valueCount
-                0,      // valueOffset
-                new byte[]{(byte)(100 * (i % 32 + 1))},  // rawValue
-                isoValue,  // stringValue
-                18761,  // little endian
-                "ISO Speed Ratings",  // name
-                ExifIfd.EXIF
-            );
-            exifTags.addExifTag(isoTag);
 
             tags[i] = exifTags;
         }
@@ -87,38 +60,15 @@ public final class ExifCacheTestHarness {
     }
 
     public void cacheExifTags(File imageFile, ExifTags exifTags) {
-        try {
-            String xml = XmlObjectExporter.marshal(exifTags);
-            cache.put(imageFile.getAbsolutePath(), xml);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        cache.cacheExifTags(imageFile, exifTags);
     }
 
     public ExifTags getCachedExifTags(File imageFile) {
-        String xml = cache.get(imageFile.getAbsolutePath());
-        if (xml == null) {
-            return null;
-        }
-        try {
-            return XmlObjectImporter.unmarshal(xml, ExifTags.class);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return cache.getCachedExifTags(imageFile);
     }
 
     public boolean containsUpToDateExifTags(File imageFile) {
-        String xml = cache.get(imageFile.getAbsolutePath());
-        if (xml == null) {
-            return false;
-        }
-        try {
-            ExifTags tags = XmlObjectImporter.unmarshal(xml, ExifTags.class);
-            // In real code, compares with file.lastModified()
-            return tags.getLastModified() > 0;
-        } catch (Exception e) {
-            return false;
-        }
+        return cache.containsUpToDateExifTags(imageFile);
     }
 
     public void clear() {
@@ -126,6 +76,19 @@ public final class ExifCacheTestHarness {
     }
 
     public void close() {
-        cache.clear();
+        factory.close();
+        deleteRecursively(tempDir);
+    }
+
+    private static void deleteRecursively(File file) {
+        if (file.isDirectory()) {
+            File[] children = file.listFiles();
+            if (children != null) {
+                for (File child : children) {
+                    deleteRecursively(child);
+                }
+            }
+        }
+        file.delete();
     }
 }
