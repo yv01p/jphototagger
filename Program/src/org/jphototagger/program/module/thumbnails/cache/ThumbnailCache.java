@@ -2,6 +2,7 @@ package org.jphototagger.program.module.thumbnails.cache;
 
 import java.awt.Image;
 import java.io.File;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bushe.swing.event.annotation.AnnotationProcessor;
@@ -41,6 +42,23 @@ public final class ThumbnailCache extends Cache<ThumbnailCacheIndirection> {
         Image thumbnail = ThumbnailsDb.findThumbnail(imageFile);
         if (thumbnail != null) {
             update(thumbnail, imageFile);
+        }
+    }
+
+    /**
+     * Prefetch multiple files in parallel using virtual threads.
+     * More efficient than sequential prefetch for large directories.
+     *
+     * @param files List of files to prefetch
+     */
+    public void prefetchParallel(List<File> files) {
+        if (files == null || files.isEmpty()) {
+            return;
+        }
+        for (File file : files) {
+            if (!fileCache.containsKey(file)) {
+                virtualThreadFetcher.submit(file);
+            }
         }
     }
 
