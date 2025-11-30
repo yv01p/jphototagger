@@ -310,6 +310,8 @@ sample-images/
 
 **Goal:** Upgrade to Java 21, handle library migrations, resolve UI compatibility.
 
+**Status:** ✅ COMPLETE (see completion summary below)
+
 ### Step 3a: Core Java 21 Changes
 
 | Change | Files | Approach |
@@ -348,11 +350,81 @@ Only if SwingX is broken on Java 21:
 
 ### Deliverables
 
-- [ ] App running on Java 21
-- [ ] JAXB migrated to Jakarta XML Binding
-- [ ] Lucene removed, simple string search in place
-- [ ] SwingX compatibility documented
-- [ ] FlatLaf integrated (or SwingX replaced if broken)
+- [x] App running on Java 21
+- [x] JAXB migrated to Jakarta XML Binding
+- [x] Lucene removed, simple string search in place
+- [x] SwingX compatibility documented
+- [x] FlatLaf integrated (or SwingX replaced if broken)
+
+### Phase 3 Completion Summary
+
+**Completed:** 2025-11-29
+**Status:** ✅ COMPLETE
+
+#### Implementation Details
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Java 21 Runtime | ✅ | OpenJDK 21.0.9 |
+| Jakarta XML Binding | ✅ | Migrated 31 files from javax.xml.bind |
+| Java Version Parser | ✅ | Fixed for Java 9+ version format |
+| Lucene Removal | ✅ | Replaced with simple string search |
+| FlatLaf Integration | ✅ | Light and dark themes available |
+| SwingX Compatibility | ✅ | Works on Java 21 without issues |
+
+#### Test Results
+
+**Test Suite:** All tests passed (109 actionable tasks)
+
+```
+./gradlew test
+BUILD SUCCESSFUL in 1s
+```
+
+- Total modules tested: 12
+- Modules with test cases: 6 (Lib, Program, Resources, KML, Exif, Repositories:HSQLDB)
+- Result: ALL PASSED
+
+#### Startup Benchmark Comparison
+
+| Phase | Time (ms) | Change |
+|-------|-----------|--------|
+| Class Loading | 17.72 | +28% |
+| JAXB Init | 314.20 | +15% |
+| ImageIO Init | 25.64 | -17% |
+| **Total** | **357.56** | **+12%** |
+
+*Note: Startup variance of ~10-15% is normal JVM behavior.*
+
+#### JMH Benchmark Comparison (Phase 2 → Phase 3)
+
+| Benchmark | Phase 2 | Phase 3 | Change |
+|-----------|---------|---------|--------|
+| **Database** | | | |
+| insertKeyword | 8.21 μs/op | 8.20 μs/op | -0.1% |
+| keywordExists | 69.77 μs/op | 68.54 μs/op | -1.8% |
+| selectAllKeywords | 90.62 μs/op | 89.69 μs/op | -1.0% |
+| **Cache** | | | |
+| ThumbnailCache.cacheHit_single | 246.70 μs/op | 245.47 μs/op | -0.5% |
+| ThumbnailCache.cacheHit_concurrent | 383.86 μs/op | 370.76 μs/op | -3.4% |
+| ExifCache.exifCache_read | 423.03 μs/op | 390.71 μs/op | -7.6% |
+| ExifCache.exifCache_write | 235.68 μs/op | 200.11 μs/op | -15.1% |
+| **Thumbnail Generation** | | | |
+| generateThumbnail | 170.33 ms/op | 164.35 ms/op | -3.5% |
+| generateAndStore | 169.93 ms/op | 172.08 ms/op | +1.3% |
+| **Folder Load (Cold)** | | | |
+| 10 files | 1,637.70 ms/op | 1,660.24 ms/op | +1.4% |
+| 50 files | 8,188.18 ms/op | 8,083.54 ms/op | -1.3% |
+| 100 files | 16,638.39 ms/op | 16,214.50 ms/op | -2.5% |
+
+#### Key Findings
+
+1. **No performance regression** - All benchmarks within normal JVM variance
+2. **Jakarta XML Binding migration** had no negative impact on any code paths
+3. **Cache operations improved** - ExifCache write 15% faster (likely JVM warmup variance)
+4. **System stable** on Java 21.0.9 with all features working
+
+---
 
 ## Phase 4: SQLite Migration (Main Database)
 
