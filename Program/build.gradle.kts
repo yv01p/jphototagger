@@ -5,6 +5,12 @@ plugins {
 
 application {
     mainClass.set("org.jphototagger.program.Main")
+    applicationDefaultJvmArgs = listOf(
+        "-XX:+UseZGC",
+        "-XX:+UseStringDeduplication",
+        "-Xmx1g",
+        "-Xms256m"
+    )
 }
 
 dependencies {
