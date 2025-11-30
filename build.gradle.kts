@@ -33,6 +33,14 @@ subprojects {
         "annotationProcessor"(files("${rootProject.projectDir}/Libraries/org-openide-util-lookup.jar"))
     }
 
+    // Ensure META-INF/services directory exists before annotation processing
+    tasks.withType<JavaCompile>().configureEach {
+        doFirst {
+            val servicesDir = destinationDirectory.asFile.get().resolve("META-INF/services")
+            servicesDir.mkdirs()
+        }
+    }
+
     // Common test dependencies
     dependencies {
         // JUnit 5
