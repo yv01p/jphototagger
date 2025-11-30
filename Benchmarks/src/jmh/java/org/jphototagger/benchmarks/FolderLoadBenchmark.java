@@ -5,7 +5,10 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import org.openjdk.jmh.annotations.*;
@@ -84,6 +87,31 @@ public class FolderLoadBenchmark {
         for (File file : testImageFiles) {
             Image thumbnail = cache.findThumbnail(file);
             bh.consume(thumbnail);
+        }
+    }
+
+    @Benchmark
+    public void folderLoad_virtualThreads(Blackhole bh) throws Exception {
+        // Test parallel loading using virtual threads
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            List<Future<Image>> futures = new ArrayList<>();
+
+            for (File file : testImageFiles) {
+                futures.add(executor.submit(() -> {
+                    BufferedImage original = ImageIO.read(file);
+                    if (original != null) {
+                        Image thumbnail = scaleThumbnail(original, THUMBNAIL_SIZE);
+                        cache.insertThumbnail(thumbnail, file);
+                        return thumbnail;
+                    }
+                    return null;
+                }));
+            }
+
+            // Wait for all to complete
+            for (Future<Image> future : futures) {
+                bh.consume(future.get());
+            }
         }
     }
 
