@@ -93,3 +93,12 @@ tasks.test {
     // Enable tests for new JUnit 5 tests (non-GUI tests)
     useJUnitPlatform()
 }
+
+tasks.register<Exec>("generateCdsArchive") {
+    description = "Generates Class Data Sharing archive for faster startup"
+    group = "distribution"
+    dependsOn("jar")
+
+    workingDir(rootProject.projectDir)
+    commandLine("bash", "scripts/generate-cds-archive.sh")
+}
