@@ -33,12 +33,16 @@ subprojects {
         "annotationProcessor"(files("${rootProject.projectDir}/Libraries/org-openide-util-lookup.jar"))
     }
 
-    // Ensure META-INF/services directory exists before annotation processing
-    tasks.withType<JavaCompile>().configureEach {
-        doFirst {
-            val servicesDir = destinationDirectory.asFile.get().resolve("META-INF/services")
-            servicesDir.mkdirs()
+    // Create META-INF/services directories before annotation processing
+    // The NetBeans Lookup processor requires these directories to exist
+    tasks.register("createServicesDirs") {
+        doLast {
+            file("build/classes/java/main/META-INF/services").mkdirs()
+            file("build/classes/java/test/META-INF/services").mkdirs()
         }
+    }
+    tasks.withType<JavaCompile>().configureEach {
+        dependsOn("createServicesDirs")
     }
 
     // Common test dependencies
