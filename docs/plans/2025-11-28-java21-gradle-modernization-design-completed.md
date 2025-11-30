@@ -870,9 +870,60 @@ java -XX:+UseZGC -jar Program/build/libs/Program.jar
 
 ---
 
+## Phase 7: Distribution (jpackage)
+
+**Goal:** Create portable app-images for Linux, Windows, and macOS with GitHub Actions CI/CD.
+
+**Status:** Designed
+
+**Design Document:** `docs/plans/2025-11-30-jpackage-distribution-design.md`
+
+### Key Decisions
+
+| Decision | Choice |
+|----------|--------|
+| Package type | App-image (portable directory) |
+| Build environment | GitHub Actions (Linux, Windows, macOS runners) |
+| Release trigger | Tag-based (`v*`) for official, manual dispatch for pre-release |
+| Version source | Git tag (starting at v2.0.0) |
+
+### Implementation
+
+| Component | Description |
+|-----------|-------------|
+| Gradle task | `jpackage` task in root `build.gradle.kts` |
+| CI workflow | `.github/workflows/release.yml` |
+| Documentation | `docs/building-distributions.md` |
+
+### JVM Options
+
+```
+-XX:+UseZGC -XX:+UseStringDeduplication -Xmx1g -Xms256m
+```
+
+### Output
+
+- `JPhotoTagger-X.Y.Z-linux.zip`
+- `JPhotoTagger-X.Y.Z-windows.zip`
+- `JPhotoTagger-X.Y.Z-macos.zip`
+
+### Deliverables
+
+- [ ] Gradle `jpackage` task
+- [ ] GitHub Actions release workflow
+- [ ] Build documentation
+
+### Not Included (Documented How to Add)
+
+- Native installers (`.deb`, `.msi`, `.dmg`)
+- Custom application icons
+- Bundled extras (manual, scripts)
+
+---
+
 ## Project Completion Summary
 
-**Status:** All 6 phases complete
+**Status:** Phases 1-6 complete, Phase 7 designed
 **Last Updated:** 2025-11-30
 
 ### Learnings
@@ -885,7 +936,7 @@ java -XX:+UseZGC -jar Program/build/libs/Program.jar
 
 ### Action Items & Next Steps
 
-1. **Distribution:** Consider jpackage for native installers
+1. **Distribution:** Implement Phase 7 (jpackage) - design complete
 2. **Documentation:** Update user documentation for SQLite migration
 3. **Migration tool:** Implement HSQLDB → SQLite data migration for existing users
 4. **Cleanup:** Remove legacy NetBeans Ant build files (nbproject/, build.xml)
