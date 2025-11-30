@@ -1,5 +1,6 @@
 [versions]
 java = "21"
+netbeans-lookup = "RELEASE230"
 hsqldb = "2.4.1"
 sqlite-jdbc = "3.45.1.0"
 metadata-extractor = "2.6.4"
@@ -37,8 +38,10 @@ mockito-junit5 = { module = "org.mockito:mockito-junit-jupiter", version.ref = "
 jmh-core = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
 jmh-generator = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
 
+netbeans-lookup = { module = "org.netbeans.api:org-openide-util-lookup", version.ref = "netbeans-lookup" }
+
 # Local JARs (referenced as file dependencies in build.gradle.kts)
-# eventbus, swingx-core, beansbinding, ImgrRdr, org-openide-util-lookup, XMPCore
+# eventbus, swingx-core, beansbinding, ImgrRdr, XMPCore
 
 [bundles]
 junit5 = ["junit5-api", "junit5-engine", "junit5-params"]

@@ -26,23 +26,13 @@ subprojects {
 
     tasks.withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
+        options.isFork = true
     }
 
-    // NetBeans Lookup annotation processor for @ServiceProvider
+    // NetBeans Lookup for @ServiceProvider annotation and annotation processor
     dependencies {
-        "annotationProcessor"(files("${rootProject.projectDir}/Libraries/org-openide-util-lookup.jar"))
-    }
-
-    // Create META-INF/services directories before annotation processing
-    // The NetBeans Lookup processor requires these directories to exist
-    tasks.register("createServicesDirs") {
-        doLast {
-            file("build/classes/java/main/META-INF/services").mkdirs()
-            file("build/classes/java/test/META-INF/services").mkdirs()
-        }
-    }
-    tasks.withType<JavaCompile>().configureEach {
-        dependsOn("createServicesDirs")
+        "implementation"(rootProject.libs.netbeans.lookup)
+        "annotationProcessor"(rootProject.libs.netbeans.lookup)
     }
 
     // Common test dependencies
