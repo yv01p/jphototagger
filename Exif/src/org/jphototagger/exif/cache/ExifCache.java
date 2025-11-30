@@ -23,8 +23,8 @@ import org.openide.util.Lookup;
  */
 public final class ExifCache {
 
-    public static final ExifCache INSTANCE = new ExifCache();
     private static final Logger LOGGER = Logger.getLogger(ExifCache.class.getName());
+    public static final ExifCache INSTANCE = new ExifCache();
     private final File cacheDir;
     private final SqliteExifCache sqliteCache;
 
