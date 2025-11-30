@@ -6,19 +6,58 @@
 
 ---
 
-## Phase 1 Completion Summary
+## Overview
 
-**Completed:** 2025-11-28
+Modernize JPhotoTagger from Java 7 + NetBeans Ant to Java 21 + Gradle, consolidating all data storage on SQLite. This addresses security (Java 7 EOL), performance, and developer experience concerns.
+
+### Current State
+
+- **Build:** 34 NetBeans Ant modules
+- **Runtime:** Java 7
+- **Database:** HSQLDB 1.8.0.10 (main), MapDB 0.9.9-SNAPSHOT (caches)
+- **UI:** Swing + SwingX 1.6.2
+- **Tests:** 33 test files, low coverage
+
+### Target State
+
+- **Build:** Gradle with Kotlin DSL
+- **Runtime:** Java 21
+- **Database:** SQLite (unified - main DB and caches)
+- **UI:** Swing + FlatLaf (modern look and feel)
+- **Tests:** Comprehensive coverage with performance benchmarks
+
+## Phase 1: Gradle + CI Infrastructure
+
+**Goal:** Replace NetBeans Ant with Gradle, establish CI pipeline.
+
 **Status:** ✅ COMPLETE
 
-### Deliverables Achieved
+### Key Decisions
 
-- [x] All 38 modules building with Gradle (34 original + TestSupport, Benchmarks, DeveloperSupport modules)
+1. **Kotlin DSL** (`.kts`) - Type safety and IDE support
+2. **Version catalog** - Centralized dependency management in `libs.versions.toml`
+3. **Preserved module structure** - Minimal disruption to existing codebase
+4. **Java 21** - Upgraded directly to Java 21 (skipped intermediate Java 7 step)
+5. **Local JARs preserved** - Non-Maven dependencies kept in `Libraries/Jars/`
+
+### CI Pipeline (GitHub Actions)
+
+- Build on every push/PR
+- Run existing tests
+- Cache Gradle dependencies
+
+### Deliverables
+
+- [x] All 38 modules building with Gradle (34 original + TestSupport, Benchmarks, DeveloperSupport)
 - [x] `./gradlew build` works
 - [x] `./gradlew :Program:run` launches the app
 - [x] GitHub Actions workflow passing (`.github/workflows/build.yml`)
 
-### Implementation Details
+### Phase 1 Completion Summary
+
+**Completed:** 2025-11-28
+
+#### Implementation Details
 
 | Component | Status | Notes |
 |-----------|--------|-------|
@@ -30,7 +69,7 @@
 | GitHub Actions CI | ✅ | Build on push/PR to master |
 | `.gitignore` | ✅ | Updated for Gradle artifacts |
 
-### Module Structure
+#### Module Structure
 
 ```
 jphototagger/
@@ -61,15 +100,19 @@ jphototagger/
 └── XMP/build.gradle.kts
 ```
 
-### Key Decisions Made
+#### Files Created/Modified
 
-1. **Kotlin DSL** (`.kts`) - Type safety and IDE support
-2. **Version catalog** - Centralized dependency management in `libs.versions.toml`
-3. **Preserved module structure** - Minimal disruption to existing codebase
-4. **Java 21** - Upgraded directly to Java 21 (skipped intermediate Java 7 step)
-5. **Local JARs preserved** - Non-Maven dependencies kept in `Libraries/Jars/`
+- `gradlew`, `gradlew.bat` - Gradle wrapper scripts
+- `gradle/wrapper/gradle-wrapper.properties` - Wrapper config
+- `gradle/wrapper/gradle-wrapper.jar` - Wrapper JAR
+- `gradle/libs.versions.toml` - Version catalog
+- `settings.gradle.kts` - Project settings
+- `build.gradle.kts` - Root build file
+- 37 module `build.gradle.kts` files
+- `.github/workflows/build.yml` - CI workflow
+- `.gitignore` - Updated for Gradle
 
-### Verification Commands
+#### Verification Commands
 
 ```bash
 # Build all modules
@@ -85,84 +128,11 @@ jphototagger/
 ./gradlew --version
 ```
 
-### Files Created/Modified
-
-- `gradlew`, `gradlew.bat` - Gradle wrapper scripts
-- `gradle/wrapper/gradle-wrapper.properties` - Wrapper config
-- `gradle/wrapper/gradle-wrapper.jar` - Wrapper JAR
-- `gradle/libs.versions.toml` - Version catalog
-- `settings.gradle.kts` - Project settings
-- `build.gradle.kts` - Root build file
-- 37 module `build.gradle.kts` files
-- `.github/workflows/build.yml` - CI workflow
-- `.gitignore` - Updated for Gradle
-
-### NetBeans Files
+#### Notes
 
 NetBeans Ant build files (`nbproject/`, `build.xml`) were preserved for reference but are no longer used.
 
 ---
-
-## Overview
-
-Modernize JPhotoTagger from Java 7 + NetBeans Ant to Java 21 + Gradle, consolidating all data storage on SQLite. This addresses security (Java 7 EOL), performance, and developer experience concerns.
-
-### Current State
-
-- **Build:** 34 NetBeans Ant modules
-- **Runtime:** Java 7
-- **Database:** HSQLDB 1.8.0.10 (main), MapDB 0.9.9-SNAPSHOT (caches)
-- **UI:** Swing + SwingX 1.6.2
-- **Tests:** 33 test files, low coverage
-
-### Target State
-
-- **Build:** Gradle with Kotlin DSL
-- **Runtime:** Java 21
-- **Database:** SQLite (unified - main DB and caches)
-- **UI:** Swing + FlatLaf (modern look and feel)
-- **Tests:** Comprehensive coverage with performance benchmarks
-
-## Phase 1: Gradle + CI Infrastructure
-
-**Goal:** Replace NetBeans Ant with Gradle, establish CI pipeline.
-
-**Status:** ✅ COMPLETE (see summary above)
-
-### Gradle Structure
-
-```
-jphototagger/
-├── settings.gradle.kts          # 34 subproject definitions
-├── build.gradle.kts              # Shared config
-├── gradle/
-│   └── libs.versions.toml        # Version catalog
-├── API/build.gradle.kts
-├── Domain/build.gradle.kts
-├── Lib/build.gradle.kts
-├── Program/build.gradle.kts      # Main application
-└── ... (30 more modules)
-```
-
-### Key Decisions
-
-- **Kotlin DSL** (`.kts`) for type safety and IDE support
-- **Version catalog** for centralized dependency management
-- **Stay on Java 7** initially - only change the build system
-- **Preserve module structure** - minimize disruption
-
-### CI Pipeline (GitHub Actions)
-
-- Build on every push/PR
-- Run existing tests
-- Cache Gradle dependencies
-
-### Deliverables
-
-- [x] All 34 modules building with Gradle
-- [x] `./gradlew build` works
-- [x] `./gradlew run` launches the app
-- [x] GitHub Actions workflow passing
 
 ## Phase 2: Testing Foundation
 
