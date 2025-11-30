@@ -37,8 +37,11 @@ public final class SqliteConnectionFactory {
 
     private void configureConnection(Connection con) throws SQLException {
         try (Statement stmt = con.createStatement()) {
+            // Enable WAL mode for better concurrent read performance
             stmt.execute("PRAGMA journal_mode=WAL");
+            // Enable foreign keys
             stmt.execute("PRAGMA foreign_keys=ON");
+            // NORMAL synchronous - good balance of safety and performance
             stmt.execute("PRAGMA synchronous=NORMAL");
         }
     }
