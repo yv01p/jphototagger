@@ -190,13 +190,52 @@ jphototagger/
 
 ### Performance Benchmarks
 
-| Benchmark | What it measures |
-|-----------|------------------|
-| Startup time | Time from `main()` to UI visible |
-| Folder load | Time to load thumbnails for 100/500/1000 images |
-| Search query | Time for keyword/metadata searches |
-| Cache hit | Thumbnail retrieval from warm cache |
-| Cache miss | Thumbnail generation from source image |
+| Benchmark | Type | What it measures |
+|-----------|------|------------------|
+| StartupBenchmark | Standalone | LnF, caches, DB, UI init times |
+| ThumbnailCacheBenchmark | JMH | Cache hit (single/concurrent), exists, upToDate |
+| ThumbnailGenerationBenchmark | JMH | Cache miss - generate thumbnail + store |
+| FolderLoadBenchmark | JMH | Cold/warm folder load for 10/50/100 images |
+| ExifCacheBenchmark | JMH | EXIF cache read/write/containsUpToDate (single/concurrent) |
+| DatabaseBenchmark | JMH | SQL query performance (insert, select, exists) |
+
+### Phase 6 Optimizations Being Measured
+
+| Optimization | Benchmark That Measures It |
+|--------------|---------------------------|
+| CDS archive | StartupBenchmark |
+| Lazy initialization | StartupBenchmark |
+| Parallel init (virtual threads) | StartupBenchmark |
+| ZGC | All (latency variance) |
+| Virtual thread pool for thumbnails | FolderLoadBenchmark, ThumbnailCacheBenchmark (concurrent) |
+| SQLite vs MapDB | ThumbnailCacheBenchmark, ExifCacheBenchmark |
+| SQLite batching | ThumbnailGenerationBenchmark (generate + store) |
+
+### Running Benchmarks
+
+```bash
+# All JMH benchmarks
+./gradlew :Benchmarks:jmh
+
+# Specific benchmark
+./gradlew :Benchmarks:jmh -Pjmh.includes="ThumbnailCacheBenchmark"
+
+# Startup benchmark
+./gradlew :Benchmarks:run
+
+# Results location
+# JMH: Benchmarks/build/reports/jmh/results.json
+# Startup: stdout (JSON format)
+```
+
+### Test Images
+
+Sample images for benchmarks located in `Benchmarks/src/jmh/resources/sample-images/`:
+
+```
+sample-images/
+└── medium/         # 10 images, ~500KB each (1920x1080)
+```
 
 ### Strategy
 
@@ -210,7 +249,16 @@ jphototagger/
 - [ ] Tests for database repository layer
 - [ ] Tests for cache read/write operations
 - [ ] Tests for JAXB serialization/deserialization
-- [ ] JMH benchmark suite with baseline measurements
+- [ ] JMH benchmark suite:
+  - [ ] StartupBenchmark (standalone)
+  - [ ] ThumbnailCacheBenchmark
+  - [ ] ThumbnailGenerationBenchmark
+  - [ ] FolderLoadBenchmark
+  - [ ] ExifCacheBenchmark
+  - [ ] DatabaseBenchmark
+- [ ] Test harness classes (ThumbnailCacheTestHarness, ExifCacheTestHarness, TestImages)
+- [ ] Sample images for benchmarks
+- [ ] Baseline measurements saved to `docs/benchmarks/`
 - [ ] CI running all tests with coverage reporting
 
 ## Phase 3: Java 21 Upgrade + UI Compatibility
@@ -460,6 +508,8 @@ cp Benchmarks/build/reports/jmh/results.json docs/benchmarks/pre-phase5-cache.js
 
 ## References
 
+- `docs/plans/2025-11-29-performance-benchmarks-design.md` - Detailed benchmark specifications and code
+- `docs/plans/2025-11-29-phase2-performance-benchmarks.md` - Phase 2 benchmark implementation plan
 - `thoughts/shared/handoffs/general/2025-11-28_22-32-58_java21-gradle-modernization.md` - Original analysis
 - `thoughts/shared/handoffs/general/2025-11-28_21-46-26_java21-upgrade-analysis.md` - Initial upgrade analysis
 - `Libraries/README.txt` - Third-party JAR versions
