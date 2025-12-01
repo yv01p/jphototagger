@@ -38,7 +38,7 @@ public class KeywordsPanelPage {
      * @return JTreeFixture for the keywords tree
      */
     public JTreeFixture getKeywordsTree() {
-        return window.tree("tree");
+        return window.tree("treeSelKeywords");
     }
 
     /**
@@ -48,7 +48,7 @@ public class KeywordsPanelPage {
      * @return JListFixture for the keywords list
      */
     public JListFixture getKeywordsList() {
-        return window.list("list");
+        return window.list("listSelKeywords");
     }
 
     /**
@@ -58,7 +58,7 @@ public class KeywordsPanelPage {
      */
     public KeywordsPanelPage switchToListView() {
         window.robot().waitForIdle();
-        window.button("buttonAsList").click();
+        window.button("buttonDisplaySelKeywordsList").click();
         window.robot().waitForIdle();
         return this;
     }
@@ -70,7 +70,7 @@ public class KeywordsPanelPage {
      */
     public KeywordsPanelPage switchToTreeView() {
         window.robot().waitForIdle();
-        window.button("buttonAsTree").click();
+        window.button("buttonDisplaySelKeywordsTree").click();
         window.robot().waitForIdle();
         return this;
     }
@@ -84,7 +84,7 @@ public class KeywordsPanelPage {
      */
     public KeywordsPanelPage filterKeywords(String text) {
         window.robot().waitForIdle();
-        JTextComponentFixture filterField = window.textBox("textFieldListFilter");
+        JTextComponentFixture filterField = window.textBox("textFieldListSelKeywordsFilter");
         filterField.deleteText();
         filterField.enterText(text);
         window.robot().waitForIdle();
@@ -150,7 +150,7 @@ public class KeywordsPanelPage {
      */
     public KeywordsPanelPage toggleExpandAllTreeNodes() {
         window.robot().waitForIdle();
-        window.button("buttonToggleExpandAllNodes").click();
+        window.button("toggleButtonExpandAllNodesSelKeywords").click();
         window.robot().waitForIdle();
         return this;
     }
@@ -162,7 +162,7 @@ public class KeywordsPanelPage {
      */
     public KeywordsPanelPage searchInTree() {
         window.robot().waitForIdle();
-        window.button("buttonSearchInTree").click();
+        window.button("buttonSearchInTreeSelKeywords").click();
         window.robot().waitForIdle();
         return this;
     }
@@ -174,7 +174,7 @@ public class KeywordsPanelPage {
      */
     public KeywordsPanelPage searchInList() {
         window.robot().waitForIdle();
-        window.button("buttonSearchInList").click();
+        window.button("buttonSearchInListSelKeywords").click();
         window.robot().waitForIdle();
         return this;
     }
