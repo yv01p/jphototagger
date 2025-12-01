@@ -25,25 +25,18 @@ class ImportWorkflowTest extends E2ETestBase {
     }
 
     @Test
-    @Disabled("App initialization hangs in headless Xvfb - needs investigation")
-    @DisplayName("Import dialog opens from File menu")
-    void openImportDialog_displaysImportDialog() {
+    @DisplayName("Import dialog opens from File menu and can be cancelled")
+    void openAndCancelImportDialog() {
+        // Open the import dialog via menu
         ImportDialogPage importDialog = mainWindow.openImportDialog();
 
+        // Verify dialog is visible
         importDialog.requireVisible();
 
-        // Close dialog to clean up
-        importDialog.clickCancel();
-    }
-
-    @Test
-    @Disabled("App initialization hangs in headless Xvfb - needs investigation")
-    @DisplayName("Import dialog can be cancelled")
-    void cancelImportDialog_closesDialog() {
-        ImportDialogPage importDialog = mainWindow.openImportDialog();
-
+        // Close the dialog
         importDialog.clickCancel();
 
+        // Verify dialog is closed
         importDialog.requireNotVisible();
     }
 

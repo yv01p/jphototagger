@@ -39,6 +39,13 @@ public class ImportDialogPage {
      */
     public void clickCancel() {
         dialog.button("dialog.import.btnCancel").click();
+        // Wait for dialog to fully close before returning
+        dialog.robot().waitForIdle();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     /**

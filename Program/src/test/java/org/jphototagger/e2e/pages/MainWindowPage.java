@@ -23,18 +23,15 @@ public class MainWindowPage {
 
     /**
      * Opens the Import dialog via File menu.
-     * Uses keyboard shortcut (Ctrl+Shift+P) which is more reliable in headless environments.
      */
     public ImportDialogPage openImportDialog() {
         // Wait for application to be ready
         window.robot().waitForIdle();
 
-        // Use keyboard shortcut Ctrl+Shift+P to open import dialog
-        // This is more reliable than menu navigation in headless Xvfb environment
-        window.pressKey(KeyEvent.VK_CONTROL).pressKey(KeyEvent.VK_SHIFT).pressKey(KeyEvent.VK_P)
-              .releaseKey(KeyEvent.VK_P).releaseKey(KeyEvent.VK_SHIFT).releaseKey(KeyEvent.VK_CONTROL);
+        // Use menu path to open import dialog - more reliable than keyboard shortcuts
+        window.menuItem("menu.file.itemImport").click();
 
-        // Wait for idle after key press
+        // Wait for idle after menu click
         window.robot().waitForIdle();
 
         // Wait for and find the import dialog

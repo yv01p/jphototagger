@@ -72,7 +72,10 @@ public final class SplashScreen {
      * @param value progress value in percent, range 0 - 100
      */
     public void setProgress(int value) {
-        assert init;
+        // Return early if splash screen was disabled (-nosplash option)
+        if (!init) {
+            return;
+        }
 
         assert (value >= 0) && (value <= 100) : value;
 
@@ -90,7 +93,10 @@ public final class SplashScreen {
     }
 
     public void setMessage(String message) {
-        assert init;
+        // Return early if splash screen was disabled (-nosplash option)
+        if (!init) {
+            return;
+        }
 
         this.message = message;
         LOGGER.log(Level.INFO, message);

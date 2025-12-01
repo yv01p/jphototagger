@@ -115,6 +115,21 @@ tasks.register<Test>("e2eTest") {
     description = "Runs E2E GUI tests (requires DISPLAY, use xvfb-run on Linux)"
     group = "verification"
 
+    // Use isolated data directory for E2E tests to avoid:
+    // 1. Lock file conflicts with running instances
+    // 2. Modal dialogs blocking on stale lock files
+    // 3. Database state conflicts between test runs
+    val e2eDataDir = layout.buildDirectory.dir("e2e-data").get().asFile
+
+    // Clean up test data directory before each run
+    doFirst {
+        if (e2eDataDir.exists()) {
+            e2eDataDir.deleteRecursively()
+        }
+        e2eDataDir.mkdirs()
+        logger.lifecycle("E2E tests using isolated data directory: ${e2eDataDir.absolutePath}")
+    }
+
     // Skip if no DISPLAY available (prevents AWTError on headless systems)
     onlyIf {
         val display = System.getenv("DISPLAY")
@@ -139,11 +154,13 @@ tasks.register<Test>("e2eTest") {
     environment("DISPLAY", System.getenv("DISPLAY") ?: ":0")
 
     // Add JVM arguments for Java 21 module system compatibility with AssertJ Swing
+    // Also set jpt.home to isolated test directory to avoid lock file and state conflicts
     jvmArgs(
         "--add-opens", "java.base/java.util=ALL-UNNAMED",
         "--add-opens", "java.desktop/java.awt=ALL-UNNAMED",
         "--add-opens", "java.desktop/javax.swing=ALL-UNNAMED",
-        "--add-opens", "java.desktop/sun.awt=ALL-UNNAMED"
+        "--add-opens", "java.desktop/sun.awt=ALL-UNNAMED",
+        "-Djpt.home=${e2eDataDir.absolutePath}"
     )
 }
 
