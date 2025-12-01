@@ -1018,3 +1018,79 @@ docs/building-distributions.md        # Build and customization guide
 - `thoughts/shared/handoffs/general/2025-11-28_22-32-58_java21-gradle-modernization.md` - Original analysis
 - `thoughts/shared/handoffs/general/2025-11-28_21-46-26_java21-upgrade-analysis.md` - Initial upgrade analysis
 - `Libraries/README.txt` - Third-party JAR versions
+
+---
+
+## Addendum: GUI Automation E2E Testing (2025-12-01)
+
+Following the completion of all 7 modernization phases, GUI automation end-to-end testing was added to ensure ongoing quality and enable confident refactoring.
+
+**Design Document:** `docs/plans/2025-12-01-gui-automation-e2e-design.md`
+
+### Scope
+
+Full GUI automation for Swing using AssertJ Swing with Page Object pattern, covering:
+- Import workflow
+- Keyword tagging workflow
+- Search workflow
+
+### Key Decisions
+
+| Decision | Choice |
+|----------|--------|
+| Framework | AssertJ Swing 3.17.1 |
+| Architecture | Page Objects wrapping AssertJ Swing interactions |
+| Test location | `Program/src/test/java/org/jphototagger/e2e/` |
+| CI execution | Xvfb (X Virtual Framebuffer) in GitHub Actions |
+
+### Implementation Status
+
+| Phase | Description | Status |
+|-------|-------------|--------|
+| Phase 1 | Infrastructure (base classes, test data, Gradle task, CI) | ✅ Complete |
+| Phase 2 | Import workflow tests | ✅ Complete |
+| Phase 3 | Keyword tagging workflow tests | 🔲 Pending |
+| Phase 4 | Search workflow tests | 🔲 Pending |
+
+### Files Created
+
+```
+Program/src/test/java/org/jphototagger/e2e/
+├── base/
+│   ├── E2ETestBase.java           # Shared setup/teardown, robot init
+│   └── TestDataManager.java        # Copy test photos to temp dirs
+├── pages/
+│   ├── MainWindowPage.java         # Main frame interactions
+│   └── ImportDialogPage.java       # Import workflow page object
+└── workflows/
+    └── ImportWorkflowTest.java     # Import workflow tests
+
+Program/src/test/resources/e2e/
+└── photos/
+    ├── test-photo-01.jpg           # Minimal placeholder JPG
+    ├── test-photo-02.jpg
+    └── test-photo-03.jpg
+
+.github/workflows/build.yml         # Updated with Xvfb E2E step
+gradle/libs.versions.toml           # Added assertj-swing dependency
+```
+
+### Running E2E Tests
+
+```bash
+# Run E2E tests locally (requires display)
+./gradlew :Program:e2eTest
+
+# Run E2E tests in headless environment
+xvfb-run --auto-servernum ./gradlew :Program:e2eTest
+```
+
+### Relationship to Modernization
+
+The E2E testing infrastructure builds on the Phase 2 testing foundation:
+- Uses JUnit 5 (established in Phase 2)
+- Leverages Gradle test infrastructure (Phase 1)
+- Runs in GitHub Actions CI (Phase 1/7)
+- Provides regression protection for future optimization work
+
+This completes the quality assurance layer for the modernized JPhotoTagger, enabling confident maintenance and feature development.
