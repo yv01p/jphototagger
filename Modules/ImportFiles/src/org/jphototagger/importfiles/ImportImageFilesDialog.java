@@ -105,6 +105,17 @@ public class ImportImageFilesDialog extends DialogExt {
         lookupSubdirectoryCreateStrategy();
         lookupFileRenameStrategy();
         lookupSkipDuplicates();
+        setComponentNames();
+    }
+
+    private void setComponentNames() {
+        setName("dialog.import");
+        buttonOk.setName("dialog.import.btnStart");
+        buttonCancel.setName("dialog.import.btnCancel");
+        buttonChooseSourceDir.setName("dialog.import.btnBrowseSource");
+        buttonChooseTargetDir.setName("dialog.import.btnBrowseTarget");
+        labelSourceDir.setName("dialog.import.lblSourceDir");
+        labelTargetDir.setName("dialog.import.lblTargetDir");
     }
 
     private void initDirectories() {
