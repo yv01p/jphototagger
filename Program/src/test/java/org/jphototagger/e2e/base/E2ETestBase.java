@@ -26,35 +26,55 @@ public abstract class E2ETestBase {
     protected static Robot robot;
     protected TestDataManager testData;
 
+    private static final long FRAME_TIMEOUT_MS = 30000; // 30 seconds for app startup
+
     @BeforeAll
     static void launchApp() {
         robot = BasicRobot.robotWithNewAwtHierarchy();
 
+        // Configure robot timeouts for CI environment
+        robot.settings().delayBetweenEvents(50);
+        robot.settings().eventPostingDelay(100);
+
         // Launch JPhotoTagger on the EDT
-        Frame frame = GuiActionRunner.execute(() -> {
+        GuiActionRunner.execute(() -> {
             AppInit.INSTANCE.init(new String[]{});
-            return findMainFrame();
+            return null;
         });
 
+        // Wait for main frame with timeout
+        Frame frame = findMainFrame();
         window = new FrameFixture(robot, frame);
         window.show();
     }
 
     private static Frame findMainFrame() {
-        // Wait for main frame to be visible
-        Frame[] frames = Frame.getFrames();
-        for (Frame frame : frames) {
-            if (frame.isVisible() && frame.getTitle().contains("JPhotoTagger")) {
-                return frame;
+        long start = System.currentTimeMillis();
+
+        while (System.currentTimeMillis() - start < FRAME_TIMEOUT_MS) {
+            Frame[] frames = Frame.getFrames();
+            // First, look for frame with JPhotoTagger title
+            for (Frame frame : frames) {
+                if (frame.isVisible() && frame.getTitle() != null
+                        && frame.getTitle().contains("JPhotoTagger")) {
+                    return frame;
+                }
+            }
+            // Fallback to first visible frame
+            for (Frame frame : frames) {
+                if (frame.isVisible()) {
+                    return frame;
+                }
+            }
+            // Wait before retrying
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
             }
         }
-        // If not found by title, return the first visible frame
-        for (Frame frame : frames) {
-            if (frame.isVisible()) {
-                return frame;
-            }
-        }
-        throw new IllegalStateException("Main frame not found");
+        throw new IllegalStateException("Main frame not found after " + FRAME_TIMEOUT_MS + "ms");
     }
 
     @BeforeEach

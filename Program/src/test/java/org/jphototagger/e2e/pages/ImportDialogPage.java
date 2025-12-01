@@ -17,18 +17,14 @@ public class ImportDialogPage {
 
     /**
      * Sets the source directory by clicking browse and selecting folder.
-     * Note: This is a simplified version that sets the label directly.
-     * For full testing, would need to handle the directory chooser.
+     *
+     * @param folder the source directory containing photos to import
+     * @return this page object for fluent chaining
+     * @throws UnsupportedOperationException directory chooser handling not yet implemented
      */
     public ImportDialogPage withSourceDirectory(File folder) {
-        // Click browse button to open directory chooser
-        dialog.button("dialog.import.btnBrowseSource").click();
-
-        // For now, we'll need to handle the native file chooser
-        // This may require robot.keyPress to type the path
-        // TODO: Implement directory chooser handling
-
-        return this;
+        throw new UnsupportedOperationException(
+            "Directory chooser handling not yet implemented. See Phase 4 of implementation plan.");
     }
 
     /**
