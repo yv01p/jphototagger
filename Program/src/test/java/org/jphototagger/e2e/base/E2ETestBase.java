@@ -11,12 +11,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 /**
  * Base class for all E2E GUI tests.
  * Handles app launch, robot creation, and test data management.
+ * Requires DISPLAY environment variable (set automatically by xvfb-run).
  */
 @Tag("e2e")
+@EnabledIfEnvironmentVariable(named = "DISPLAY", matches = ".+")
 public abstract class E2ETestBase {
 
     protected static FrameFixture window;

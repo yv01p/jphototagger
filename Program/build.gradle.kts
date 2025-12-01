@@ -109,8 +109,19 @@ tasks.withType<ProcessResources>().configureEach {
 }
 
 tasks.register<Test>("e2eTest") {
-    description = "Runs E2E GUI tests"
+    description = "Runs E2E GUI tests (requires DISPLAY, use xvfb-run on Linux)"
     group = "verification"
+
+    // Skip if no DISPLAY available (prevents AWTError on headless systems)
+    onlyIf {
+        val display = System.getenv("DISPLAY")
+        if (display.isNullOrBlank()) {
+            logger.lifecycle("Skipping e2eTest: DISPLAY not set. Run with xvfb-run on Linux.")
+            false
+        } else {
+            true
+        }
+    }
 
     useJUnitPlatform {
         includeTags("e2e")
