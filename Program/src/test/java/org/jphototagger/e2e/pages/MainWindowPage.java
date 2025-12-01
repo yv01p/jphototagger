@@ -7,6 +7,7 @@ import org.assertj.swing.fixture.JPanelFixture;
 import org.assertj.swing.fixture.JTreeFixture;
 
 import javax.swing.JDialog;
+import java.awt.event.KeyEvent;
 
 /**
  * Page object for the main JPhotoTagger window.
@@ -22,9 +23,19 @@ public class MainWindowPage {
 
     /**
      * Opens the Import dialog via File menu.
+     * Uses keyboard shortcut (Ctrl+Shift+P) which is more reliable in headless environments.
      */
     public ImportDialogPage openImportDialog() {
-        window.menuItem("menu.file.itemImport").click();
+        // Wait for application to be ready
+        window.robot().waitForIdle();
+
+        // Use keyboard shortcut Ctrl+Shift+P to open import dialog
+        // This is more reliable than menu navigation in headless Xvfb environment
+        window.pressKey(KeyEvent.VK_CONTROL).pressKey(KeyEvent.VK_SHIFT).pressKey(KeyEvent.VK_P)
+              .releaseKey(KeyEvent.VK_P).releaseKey(KeyEvent.VK_SHIFT).releaseKey(KeyEvent.VK_CONTROL);
+
+        // Wait for idle after key press
+        window.robot().waitForIdle();
 
         // Wait for and find the import dialog
         DialogFixture dialog = window.dialog(new GenericTypeMatcher<JDialog>(JDialog.class) {

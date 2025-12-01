@@ -104,6 +104,10 @@ tasks.test {
     useJUnitPlatform()
 }
 
+tasks.withType<ProcessResources>().configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 tasks.register<Test>("e2eTest") {
     description = "Runs E2E GUI tests"
     group = "verification"
@@ -116,6 +120,17 @@ tasks.register<Test>("e2eTest") {
 
     // E2E tests need more memory for GUI
     maxHeapSize = "512m"
+
+    // Pass DISPLAY environment variable for Xvfb
+    environment("DISPLAY", System.getenv("DISPLAY") ?: ":0")
+
+    // Add JVM arguments for Java 21 module system compatibility with AssertJ Swing
+    jvmArgs(
+        "--add-opens", "java.base/java.util=ALL-UNNAMED",
+        "--add-opens", "java.desktop/java.awt=ALL-UNNAMED",
+        "--add-opens", "java.desktop/javax.swing=ALL-UNNAMED",
+        "--add-opens", "java.desktop/sun.awt=ALL-UNNAMED"
+    )
 }
 
 tasks.register<Exec>("generateCdsArchive") {
