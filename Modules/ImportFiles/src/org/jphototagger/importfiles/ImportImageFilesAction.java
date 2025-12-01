@@ -31,6 +31,7 @@ public final class ImportImageFilesAction extends AbstractAction implements Menu
     @Override
     public JMenuItem getMenuItem() {
         JMenuItem item = UiFactory.menuItem(this);
+        item.setName("menu.file.itemImport");
         MenuUtil.setMnemonics(item);
         return item;
     }
