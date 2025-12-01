@@ -12,7 +12,7 @@ Modernize JPhotoTagger from Java 7 + NetBeans Ant to Java 21 + Gradle, consolida
 
 This document summarizes the execution and metrics demonstrating a structured, agent-centric approach using Anthropic's tooling ecosystem.
 
-This modernization was done with Claude Code CLI, using agents, subagents, and skills from [Superpowers]([GitHub - obra/superpowers: Claude Code superpowers: core skills library](https://github.com/obra/superpowers)), some commands from [Human Layer]([GitHub - humanlayer/humanlayer: The best way to get AI coding agents to solve hard problems in complex codebases.](https://github.com/humanlayer/humanlayer)), and monitoring the context window with [ccusage]([GitHub - ryoppippi/ccusage: A CLI tool for analyzing Claude Code/Codex CLI usage from local JSONL files.](https://github.com/ryoppippi/ccusage)).
+This modernization was done with Claude Code CLI, using agents, subagents, and skills from [Superpowers](https://github.com/obra/superpowers), some commands from [Human Layer](https://github.com/humanlayer/humanlayer), and monitoring the context window with [ccusage](https://github.com/ryoppippi/ccusage).
 
 From brainstorming a plan to best modernize the application (~368,000 lines of code), executing on the plan, to debugging and documenting it took about 20 hours over 3 days. Using the Claude API, the cost was about $205.
 
