@@ -64,6 +64,9 @@ dependencies {
 
     // Test dependencies
     testImplementation(project(":TestSupport"))
+    testImplementation(libs.assertj.swing)
+    testImplementation(libs.bundles.junit5)
+    testImplementation(libs.assertj)
 }
 
 sourceSets {
@@ -92,6 +95,20 @@ tasks.jar {
 tasks.test {
     // Enable tests for new JUnit 5 tests (non-GUI tests)
     useJUnitPlatform()
+}
+
+tasks.register<Test>("e2eTest") {
+    description = "Runs E2E GUI tests"
+    group = "verification"
+
+    useJUnitPlatform {
+        includeTags("e2e")
+    }
+
+    failFast = true
+
+    // E2E tests need more memory for GUI
+    maxHeapSize = "512m"
 }
 
 tasks.register<Exec>("generateCdsArchive") {

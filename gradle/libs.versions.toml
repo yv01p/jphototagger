@@ -15,6 +15,7 @@ junit5 = "5.10.2"
 assertj = "3.24.2"
 mockito = "5.11.0"
 jmh = "1.37"
+assertj-swing = "3.17.1"
 
 [libraries]
 hsqldb = { module = "org.hsqldb:hsqldb", version.ref = "hsqldb" }
@@ -37,6 +38,7 @@ mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-junit5 = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 jmh-core = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
 jmh-generator = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
+assertj-swing = { module = "org.assertj:assertj-swing-junit", version.ref = "assertj-swing" }
 
 netbeans-lookup = { module = "org.netbeans.api:org-openide-util-lookup", version.ref = "netbeans-lookup" }
 
