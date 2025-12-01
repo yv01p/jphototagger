@@ -117,8 +117,17 @@ public final class EditRepeatableTextEntryPanel extends PanelExt implements Text
         }
         textAreaInput.setInputVerifier(metaDataValue.getInputVerifier());
         textAreaInput.getDocument().addDocumentListener(this);
-        textAreaInput.setName(metaDataValue.getDescription());
+        setComponentNames();
         EditMetadtaUtil.addCopyPasteToComponentPopupMenu(textAreaInput);
+    }
+
+    private void setComponentNames() {
+        String category = metaDataValue.getCategory();
+        textAreaInput.setName(category + ".textAreaInput");
+        list.setName(category + ".list");
+        buttonAddInput.setName(category + ".buttonAddInput");
+        buttonRemoveSelection.setName(category + ".buttonRemoveSelection");
+        buttonSuggestion.setName(category + ".buttonSuggestion");
     }
 
     private void setTextFieldBorder(JComponent component) {
