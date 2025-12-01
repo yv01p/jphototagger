@@ -71,11 +71,18 @@ dependencies {
 
 sourceSets {
     main {
-        java.srcDirs("src")
-        resources.srcDirs("src")
+        java {
+            srcDirs("src")
+            exclude("test/**")
+        }
+        resources {
+            srcDirs("src")
+            exclude("test/**")
+        }
     }
     test {
-        java.srcDirs("test")
+        java.srcDirs("test", "src/test/java")
+        resources.srcDirs("src/test/resources")
     }
 }
 
