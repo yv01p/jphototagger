@@ -101,7 +101,10 @@ tasks.jar {
 
 tasks.test {
     // Enable tests for new JUnit 5 tests (non-GUI tests)
-    useJUnitPlatform()
+    // Exclude E2E tests - those run separately via e2eTest task
+    useJUnitPlatform {
+        excludeTags("e2e")
+    }
 }
 
 tasks.withType<ProcessResources>().configureEach {
