@@ -25,9 +25,9 @@ public class KeywordsPanelPage {
      */
     public KeywordsPanelPage selectKeywordsTab() {
         window.robot().waitForIdle();
-        window.panel("panelSelKeywords").requireVisible();
-        window.tabbedPane("tabbedPaneSelection").selectTab("panelSelKeywords");
+        window.tabbedPane("tabbedPaneSelection").selectTab(4); // Keywords tab index
         window.robot().waitForIdle();
+        window.panel("panelSelKeywords").requireVisible();
         return this;
     }
 

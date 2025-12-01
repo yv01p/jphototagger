@@ -29,9 +29,9 @@ public class EditMetadataPage {
      */
     public EditMetadataPage selectKeywordsTab() {
         window.robot().waitForIdle();
-        window.panel("panelEditKeywords").requireVisible();
-        window.tabbedPane("tabbedPaneMetadata").selectTab("panelEditKeywords");
+        window.tabbedPane("tabbedPaneMetadata").selectTab(0); // Keywords tab index
         window.robot().waitForIdle();
+        window.panel("panelEditKeywords").requireVisible();
         return this;
     }
 
