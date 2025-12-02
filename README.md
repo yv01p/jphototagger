@@ -1,4 +1,4 @@
-# JPhotoTagger Modernization
+# JPhotoTagger Modernization Design
 
 **Date:** 2025-11-28
 **Status:** Approved
@@ -8,13 +8,15 @@
 
 ## Overview
 
+**<mark>THIS REPOSITORY IS NOT MAINTAINED</mark>**
+
 Modernize JPhotoTagger from Java 7 + NetBeans Ant to Java 21 + Gradle, consolidating all data storage on SQLite. This addresses security (Java 7 EOL), performance, and developer experience concerns.
 
-This document summarizes the execution and metrics demonstrating a structured, agent-centric approach using Anthropic's tooling ecosystem.
+This document summarizes the execution and metrics demonstrating a structured, agent-centric approach using Anthropic's tooling ecosystem. The docs directory contains all the plans and plenty of documentation if you are interested in all the details of the modernization.
 
 This modernization was done with Claude Code CLI, using agents, subagents, and skills from [Superpowers](https://github.com/obra/superpowers), some commands from [Human Layer](https://github.com/humanlayer/humanlayer), and monitoring the context window with [ccusage](https://github.com/ryoppippi/ccusage).
 
-From brainstorming a plan to best modernize the application (~368,000 lines of code), executing on the plan, to debugging and documenting it took about 20 hours over 3 days. Using the Claude API, the cost was about $205.
+From brainstorming a plan to best modernize the application (~368,000 lines of code), executing on the plan, to debugging and documenting it took about 26 hours over 4 days. Using the Claude API, the cost was about $275.
 
 ### Current State
 
@@ -66,14 +68,14 @@ From brainstorming a plan to best modernize the application (~368,000 lines of c
 #### Implementation Details
 
 | Component | Status | Notes |
-| --- | --- | --- |
-| Gradle Wrapper | ✅   | Gradle 8.5 |
-| Root `build.gradle.kts` | ✅   | Shared configuration for all subprojects |
-| `settings.gradle.kts` | ✅   | 38 subproject definitions with proper naming |
-| Version Catalog | ✅   | `gradle/libs.versions.toml` for centralized dependency management |
-| Module Build Files | ✅   | 38 `build.gradle.kts` files created |
-| GitHub Actions CI | ✅   | Build on push/PR to master |
-| `.gitignore` | ✅   | Updated for Gradle artifacts |
+|-----------|--------|-------|
+| Gradle Wrapper | ✅ | Gradle 8.5 |
+| Root `build.gradle.kts` | ✅ | Shared configuration for all subprojects |
+| `settings.gradle.kts` | ✅ | 38 subproject definitions with proper naming |
+| Version Catalog | ✅ | `gradle/libs.versions.toml` for centralized dependency management |
+| Module Build Files | ✅ | 38 `build.gradle.kts` files created |
+| GitHub Actions CI | ✅ | Build on push/PR to master |
+| `.gitignore` | ✅ | Updated for Gradle artifacts |
 
 #### Module Structure
 
@@ -147,7 +149,7 @@ NetBeans Ant build files (`nbproject/`, `build.xml`) were preserved for referenc
 ### Testing Stack
 
 | Library | Purpose |
-| --- | --- |
+|---------|---------|
 | JUnit 5 | Test framework (upgrade from JUnit 4) |
 | AssertJ | Fluent assertions |
 | Mockito | Mocking |
@@ -156,7 +158,7 @@ NetBeans Ant build files (`nbproject/`, `build.xml`) were preserved for referenc
 ### Test Categories
 
 | Category | Focus | Priority |
-| --- | --- | --- |
+|----------|-------|----------|
 | Database layer | Repository classes, SQL queries | High |
 | File operations | Image reading, metadata extraction | High |
 | Cache layer | Thumbnail/EXIF cache operations | High |
@@ -167,7 +169,7 @@ NetBeans Ant build files (`nbproject/`, `build.xml`) were preserved for referenc
 ### Performance Benchmarks
 
 | Benchmark | Type | What it measures |
-| --- | --- | --- |
+|-----------|------|------------------|
 | StartupBenchmark | Standalone | LnF, caches, DB, UI init times |
 | ThumbnailCacheBenchmark | JMH | Cache hit (single/concurrent), exists, upToDate |
 | ThumbnailGenerationBenchmark | JMH | Cache miss - generate thumbnail + store |
@@ -178,7 +180,7 @@ NetBeans Ant build files (`nbproject/`, `build.xml`) were preserved for referenc
 ### Phase 6 Optimizations Being Measured
 
 | Optimization | Benchmark That Measures It |
-| --- | --- |
+|--------------|---------------------------|
 | CDS archive | StartupBenchmark |
 | Lazy initialization | StartupBenchmark |
 | Parallel init (virtual threads) | StartupBenchmark |
@@ -242,7 +244,7 @@ sample-images/
 **Startup Benchmark** (from `docs/benchmarks/startup-baseline.txt`):
 
 | Phase | Time |
-| --- | --- |
+|-------|------|
 | Class Loading | 13.84 ms |
 | JAXB Init | 274.31 ms |
 | ImageIO Init | 30.95 ms |
@@ -251,31 +253,31 @@ sample-images/
 **JMH Benchmarks** (from `docs/benchmarks/baseline-phase2.json`):
 
 | Benchmark | Score | Unit |
-| --- | --- | --- |
-| **Database** |     |     |
+|-----------|-------|------|
+| **Database** | | |
 | insertKeyword | 8.21 | μs/op |
 | keywordExists | 69.77 | μs/op |
 | selectAllKeywords | 90.62 | μs/op |
 | selectChildKeywords | 62.41 | μs/op |
 | selectRootKeywords | 49.20 | μs/op |
-| **EXIF Cache** |     |     |
+| **EXIF Cache** | | |
 | exifCache_containsUpToDate | 410.12 | μs/op |
 | exifCache_read | 423.03 | μs/op |
 | exifCache_read_concurrent (10 threads) | 648.82 | μs/op |
 | exifCache_write | 235.68 | μs/op |
-| **Thumbnail Cache** |     |     |
+| **Thumbnail Cache** | | |
 | cacheExists_single | 0.02 | μs/op |
 | cacheHit_single | 246.70 | μs/op |
 | cacheHit_concurrent (10 threads) | 383.86 | μs/op |
 | cacheUpToDate_single | 0.02 | μs/op |
-| **Thumbnail Generation** |     |     |
+| **Thumbnail Generation** | | |
 | generateThumbnail | 170.33 | ms/op |
 | generateAndStore | 169.93 | ms/op |
-| **Folder Load (Cold Cache)** |     |     |
+| **Folder Load (Cold Cache)** | | |
 | 10 files | 1,637.70 | ms/op |
 | 50 files | 8,188.18 | ms/op |
 | 100 files | 16,638.39 | ms/op |
-| **Folder Load (Warm Cache)** |     |     |
+| **Folder Load (Warm Cache)** | | |
 | 10 files | 2.84 | ms/op |
 | 50 files | 65.34 | ms/op |
 | 100 files | 16,655.85 | ms/op |
@@ -291,7 +293,7 @@ sample-images/
 ### Step 3a: Core Java 21 Changes
 
 | Change | Files | Approach |
-| --- | --- | --- |
+|--------|-------|----------|
 | Source/target → 21 | `build.gradle.kts` | Configuration change |
 | `javax.xml.bind` → `jakarta.xml.bind` | 31 files | Find/replace + add dependency |
 | `SystemUtil.getJavaVersion()` | 1 file | Fix for Java 9+ version format |
@@ -319,7 +321,7 @@ If SwingX works on Java 21:
 Only if SwingX is broken on Java 21:
 
 | SwingX Component | Standard Replacement |
-| --- | --- |
+|------------------|---------------------|
 | `JXList` | `JList` with custom renderer |
 | `JXTree` | `JTree` with custom renderer |
 | `JXLabel` | `JLabel` |
@@ -340,13 +342,13 @@ Only if SwingX is broken on Java 21:
 #### Implementation Details
 
 | Component | Status | Notes |
-| --- | --- | --- |
-| Java 21 Runtime | ✅   | OpenJDK 21.0.9 |
-| Jakarta XML Binding | ✅   | Migrated 31 files from javax.xml.bind |
-| Java Version Parser | ✅   | Fixed for Java 9+ version format |
-| Lucene Removal | ✅   | Replaced with simple string search |
-| FlatLaf Integration | ✅   | Light and dark themes available |
-| SwingX Compatibility | ✅   | Works on Java 21 without issues |
+|-----------|--------|-------|
+| Java 21 Runtime | ✅ | OpenJDK 21.0.9 |
+| Jakarta XML Binding | ✅ | Migrated 31 files from javax.xml.bind |
+| Java Version Parser | ✅ | Fixed for Java 9+ version format |
+| Lucene Removal | ✅ | Replaced with simple string search |
+| FlatLaf Integration | ✅ | Light and dark themes available |
+| SwingX Compatibility | ✅ | Works on Java 21 without issues |
 
 #### Test Results
 
@@ -364,7 +366,7 @@ BUILD SUCCESSFUL in 1s
 #### Startup Benchmark Comparison
 
 | Phase | Time (ms) | Change |
-| --- | --- | --- |
+|-------|-----------|--------|
 | Class Loading | 17.72 | +28% |
 | JAXB Init | 314.20 | +15% |
 | ImageIO Init | 25.64 | -17% |
@@ -375,20 +377,20 @@ BUILD SUCCESSFUL in 1s
 #### JMH Benchmark Comparison (Phase 2 → Phase 3)
 
 | Benchmark | Phase 2 | Phase 3 | Change |
-| --- | --- | --- | --- |
-| **Database** |     |     |     |
+|-----------|---------|---------|--------|
+| **Database** | | | |
 | insertKeyword | 8.21 μs/op | 8.20 μs/op | -0.1% |
 | keywordExists | 69.77 μs/op | 68.54 μs/op | -1.8% |
 | selectAllKeywords | 90.62 μs/op | 89.69 μs/op | -1.0% |
-| **Cache** |     |     |     |
+| **Cache** | | | |
 | ThumbnailCache.cacheHit_single | 246.70 μs/op | 245.47 μs/op | -0.5% |
 | ThumbnailCache.cacheHit_concurrent | 383.86 μs/op | 370.76 μs/op | -3.4% |
 | ExifCache.exifCache_read | 423.03 μs/op | 390.71 μs/op | -7.6% |
 | ExifCache.exifCache_write | 235.68 μs/op | 200.11 μs/op | -15.1% |
-| **Thumbnail Generation** |     |     |     |
+| **Thumbnail Generation** | | | |
 | generateThumbnail | 170.33 ms/op | 164.35 ms/op | -3.5% |
 | generateAndStore | 169.93 ms/op | 172.08 ms/op | +1.3% |
-| **Folder Load (Cold)** |     |     |     |
+| **Folder Load (Cold)** | | | |
 | 10 files | 1,637.70 ms/op | 1,660.24 ms/op | +1.4% |
 | 50 files | 8,188.18 ms/op | 8,083.54 ms/op | -1.3% |
 | 100 files | 16,638.39 ms/op | 16,214.50 ms/op | -2.5% |
@@ -411,18 +413,17 @@ BUILD SUCCESSFUL in 1s
 ### Components
 
 1. **SQLite Repository Layer**
-  
-  - Add `org.xerial:sqlite-jdbc` dependency
-  - New repository implementations with SQLite-compatible SQL
+   - Add `org.xerial:sqlite-jdbc` dependency
+   - New repository implementations with SQLite-compatible SQL
+
 2. **Schema Adaptation**
-  
-  - `IDENTITY` → `INTEGER PRIMARY KEY AUTOINCREMENT`
-  - `LONGVARCHAR` → `TEXT`
-  - Create clean SQLite schema
+   - `IDENTITY` → `INTEGER PRIMARY KEY AUTOINCREMENT`
+   - `LONGVARCHAR` → `TEXT`
+   - Create clean SQLite schema
+
 3. **Connection Handling**
-  
-  - Replace custom `ConnectionPool.java` with direct connections
-  - Enable WAL mode for concurrent read performance
+   - Replace custom `ConnectionPool.java` with direct connections
+   - Enable WAL mode for concurrent read performance
 
 ### Migration Tool
 
@@ -455,12 +456,12 @@ Separate utility for users to migrate existing data:
 #### Implementation Details
 
 | Component | Status | Notes |
-| --- | --- | --- |
-| SQLite JDBC | ✅   | xerial sqlite-jdbc dependency added |
-| Repository Layer | ✅   | SQLite-compatible SQL implementations |
-| Schema Migration | ✅   | IDENTITY → AUTOINCREMENT, LONGVARCHAR → TEXT |
-| WAL Mode | ✅   | Enabled for concurrent read performance |
-| Connection Handling | ✅   | Direct connections replacing ConnectionPool |
+|-----------|--------|-------|
+| SQLite JDBC | ✅ | xerial sqlite-jdbc dependency added |
+| Repository Layer | ✅ | SQLite-compatible SQL implementations |
+| Schema Migration | ✅ | IDENTITY → AUTOINCREMENT, LONGVARCHAR → TEXT |
+| WAL Mode | ✅ | Enabled for concurrent read performance |
+| Connection Handling | ✅ | Direct connections replacing ConnectionPool |
 
 #### SQLite Configuration
 
@@ -485,7 +486,7 @@ BUILD SUCCESSFUL
 #### JMH Benchmark Comparison (HSQLDB → SQLite)
 
 | Benchmark | HSQLDB | SQLite | Change |
-| --- | --- | --- | --- |
+|-----------|--------|--------|--------|
 | insertKeyword | 8.12 μs/op | 18.91 μs/op | +133% |
 | keywordExists | 75.34 μs/op | 69.16 μs/op | -8% |
 | selectAllKeywords | 90.70 μs/op | 589.11 μs/op | +550% |
@@ -517,7 +518,7 @@ BUILD SUCCESSFUL
 ### Current MapDB Usage
 
 | File | Purpose |
-| --- | --- |
+|------|---------|
 | `ThumbnailsDb.java` | File path → JPEG thumbnail bytes |
 | `ExifCache.java` | File path → EXIF metadata |
 
@@ -548,14 +549,12 @@ CREATE TABLE exif_cache (
 ### Benchmark Checkpoint
 
 **Before starting Phase 5:**
-
 ```bash
 ./gradlew :Benchmarks:jmh -Pjmh.includes="ThumbnailCacheBenchmark|ExifCacheBenchmark"
 cp Benchmarks/build/reports/jmh/results.json docs/benchmarks/pre-phase5-cache.json
 ```
 
 **After completing Phase 5:**
-
 ```bash
 ./gradlew :Benchmarks:jmh -Pjmh.includes="ThumbnailCacheBenchmark|ExifCacheBenchmark"
 # Compare results.json with pre-phase5-cache.json
@@ -577,15 +576,15 @@ cp Benchmarks/build/reports/jmh/results.json docs/benchmarks/pre-phase5-cache.js
 #### Implementation Details
 
 | Component | Status | Notes |
-| --- | --- | --- |
-| CacheDb Module | ✅   | New module with SQLite cache infrastructure |
-| CacheConnectionFactory | ✅   | WAL mode, NORMAL synchronous for performance |
-| CacheDatabase Base Class | ✅   | Abstract base with transaction patterns |
-| SQLite Thumbnail Cache | ✅   | Full implementation with schema |
-| SQLite EXIF Cache | ✅   | Moved to Exif module (circular dependency resolution) |
-| CacheDbInit | ✅   | Unified initialization for both caches |
-| MapDB Removal | ✅   | `Libraries/mapdb.jar` deleted |
-| Benchmark Harnesses | ✅   | Updated to use SQLite backend |
+|-----------|--------|-------|
+| CacheDb Module | ✅ | New module with SQLite cache infrastructure |
+| CacheConnectionFactory | ✅ | WAL mode, NORMAL synchronous for performance |
+| CacheDatabase Base Class | ✅ | Abstract base with transaction patterns |
+| SQLite Thumbnail Cache | ✅ | Full implementation with schema |
+| SQLite EXIF Cache | ✅ | Moved to Exif module (circular dependency resolution) |
+| CacheDbInit | ✅ | Unified initialization for both caches |
+| MapDB Removal | ✅ | `Libraries/mapdb.jar` deleted |
+| Benchmark Harnesses | ✅ | Updated to use SQLite backend |
 
 #### Module Structure
 
@@ -631,13 +630,13 @@ CREATE TABLE exif_cache (
 #### Benchmark Comparison (MapDB → SQLite)
 
 | Benchmark | MapDB | SQLite | Change |
-| --- | --- | --- | --- |
-| **Thumbnail Cache** |     |     |     |
+|-----------|-------|--------|--------|
+| **Thumbnail Cache** | | | |
 | cacheExists_single | 0.020 µs/op | 0.020 µs/op | ~0% |
 | cacheHit_single | 241.68 µs/op | 241.68 µs/op | ~0% |
 | cacheHit_concurrent (10 threads) | 345.01 µs/op | 345.01 µs/op | ~0% |
 | cacheUpToDate_single | 0.022 µs/op | 0.022 µs/op | ~0% |
-| **EXIF Cache** |     |     |     |
+| **EXIF Cache** | | | |
 | exifCache_containsUpToDate | 401.72 µs/op | 401.72 µs/op | ~0% |
 | exifCache_read | 377.87 µs/op | 377.87 µs/op | ~0% |
 | exifCache_read_concurrent (10 threads) | 583.63 µs/op | 583.63 µs/op | ~0% |
@@ -699,7 +698,7 @@ BUILD SUCCESSFUL
 ### Startup Time
 
 | Optimization | Approach |
-| --- | --- |
+|--------------|----------|
 | Class Data Sharing (CDS) | Create CDS archive for faster class loading |
 | Lazy initialization | Defer non-essential modules |
 | Parallel init | Virtual threads for independent startup tasks |
@@ -714,7 +713,7 @@ BUILD SUCCESSFUL
 ### Database Performance
 
 | Optimization | Approach |
-| --- | --- |
+|--------------|----------|
 | Indexes | Add indexes on frequently-queried columns |
 | Query optimization | Identify and optimize slow queries |
 | Batch operations | Batch inserts/updates |
@@ -730,7 +729,6 @@ BUILD SUCCESSFUL
 ### Benchmark Validation
 
 **Run full benchmark suite and compare to Phase 2 baseline:**
-
 ```bash
 # Run all benchmarks
 ./gradlew :Benchmarks:jmh
@@ -744,7 +742,7 @@ BUILD SUCCESSFUL
 **Expected improvements:**
 
 | Benchmark | Metric | Target |
-| --- | --- | --- |
+|-----------|--------|--------|
 | StartupBenchmark | total_ms | 30-50% faster (CDS + parallel init) |
 | FolderLoadBenchmark (cold, 100) | avg time | 2-4x faster (virtual threads) |
 | ThumbnailCacheBenchmark (concurrent) | throughput | 2-3x higher (virtual threads) |
@@ -766,12 +764,12 @@ BUILD SUCCESSFUL
 #### Implementation Details
 
 | Component | Status | Notes |
-| --- | --- | --- |
-| Virtual Thread Thumbnail Fetcher | ✅   | `Executors.newVirtualThreadPerTaskExecutor()` for parallel I/O |
-| Database Indexes | ✅   | 16+ indexes on frequently-queried columns |
-| WAL Mode | ✅   | `PRAGMA journal_mode=WAL` for concurrent reads |
-| CDS Archive Script | ✅   | `scripts/generate-cds-archive.sh` for faster startup |
-| ZGC Configuration | ✅   | Launch scripts with `-XX:+UseZGC` |
+|-----------|--------|-------|
+| Virtual Thread Thumbnail Fetcher | ✅ | `Executors.newVirtualThreadPerTaskExecutor()` for parallel I/O |
+| Database Indexes | ✅ | 16+ indexes on frequently-queried columns |
+| WAL Mode | ✅ | `PRAGMA journal_mode=WAL` for concurrent reads |
+| CDS Archive Script | ✅ | `scripts/generate-cds-archive.sh` for faster startup |
+| ZGC Configuration | ✅ | Launch scripts with `-XX:+UseZGC` |
 
 #### Files Created/Modified
 
@@ -794,36 +792,36 @@ scripts/
 The primary Phase 6 optimization: Java 21 virtual threads for parallel thumbnail fetching.
 
 | Files | Cold Cache (Sequential) | Virtual Threads (Parallel) | Speedup |
-| --- | --- | --- | --- |
-| 10  | 1633.92 ms | 243.71 ms | **6.7x faster** |
-| 50  | 8003.89 ms | 931.42 ms | **8.6x faster** |
-| 100 | 16818.98 ms | 1827.47 ms | **9.2x faster** |
+|-------|-------------------------|----------------------------|---------|
+| 10    | 1633.92 ms              | 243.71 ms                  | **6.7x faster** |
+| 50    | 8003.89 ms              | 931.42 ms                  | **8.6x faster** |
+| 100   | 16818.98 ms             | 1827.47 ms                 | **9.2x faster** |
 
 The speedup scales with file count because more I/O operations can be parallelized.
 
 #### JMH Benchmark Comparison (Phase 2 → Phase 6)
 
 | Benchmark | Phase 2 | Phase 6 | Change |
-| --- | --- | --- | --- |
-| **Database** |     |     |     |
+|-----------|---------|---------|--------|
+| **Database** | | | |
 | insertKeyword | 8.21 µs/op | 8.08 µs/op | -1.6% |
 | keywordExists | 69.77 µs/op | 72.19 µs/op | +3.5% |
 | selectAllKeywords | 90.62 µs/op | 92.67 µs/op | +2.3% |
 | selectChildKeywords | 62.41 µs/op | 63.83 µs/op | +2.3% |
 | selectRootKeywords | 49.20 µs/op | 50.47 µs/op | +2.6% |
-| **Thumbnail Cache** |     |     |     |
+| **Thumbnail Cache** | | | |
 | cacheExists_single | 0.02 µs/op | 266.23 µs/op | N/A (different test) |
 | cacheHit_single | 246.70 µs/op | 519.92 µs/op | +111% (SQLite vs MapDB) |
 | cacheHit_concurrent | 383.86 µs/op | 1832.14 µs/op | +377% (SQLite vs MapDB) |
-| **EXIF Cache** |     |     |     |
+| **EXIF Cache** | | | |
 | exifCache_containsUpToDate | 410.12 µs/op | 275.78 µs/op | -33% |
 | exifCache_read | 423.03 µs/op | 901.93 µs/op | +113% (SQLite vs MapDB) |
 | exifCache_write | 235.68 µs/op | 896.69 µs/op | +280% (SQLite vs MapDB) |
-| **Folder Load (Cold Cache)** |     |     |     |
+| **Folder Load (Cold Cache)** | | | |
 | 10 files | 1,637.70 ms/op | 1,633.92 ms/op | -0.2% |
 | 50 files | 8,188.18 ms/op | 8,003.89 ms/op | -2.3% |
 | 100 files | 16,638.39 ms/op | 16,818.98 ms/op | +1.1% |
-| **Folder Load (Virtual Threads)** |     |     |     |
+| **Folder Load (Virtual Threads)** | | | |
 | 10 files | N/A | 243.71 ms/op | **NEW** |
 | 50 files | N/A | 931.42 ms/op | **NEW** |
 | 100 files | N/A | 1,827.47 ms/op | **NEW** |
@@ -832,9 +830,9 @@ The speedup scales with file count because more I/O operations can be paralleliz
 
 1. **Virtual threads deliver 6.7-9.2x speedup** for folder loading with parallel thumbnail fetching
 2. **SQLite cache operations are slower** than MapDB for individual operations but provide:
-  - Unified storage backend (simpler architecture)
-  - Better tooling (standard SQLite tools)
-  - Single file deployment
+   - Unified storage backend (simpler architecture)
+   - Better tooling (standard SQLite tools)
+   - Single file deployment
 3. **Database performance stable** within normal JVM variance
 4. **Cold cache performance unchanged** - expected since it measures sequential loading
 
@@ -892,7 +890,7 @@ java -XX:+UseZGC -jar Program/build/libs/Program.jar
 ### Key Decisions
 
 | Decision | Choice |
-| --- | --- |
+|----------|--------|
 | Package type | App-image (portable directory) |
 | Build environment | GitHub Actions (Linux, Windows, macOS runners) |
 | Release trigger | Tag-based (`v*`) for official, manual dispatch for pre-release |
@@ -912,12 +910,12 @@ java -XX:+UseZGC -jar Program/build/libs/Program.jar
 #### Implementation Details
 
 | Component | Status | Notes |
-| --- | --- | --- |
-| Gradle `jpackage` task | ✅   | `build.gradle.kts` with OS auto-detection |
-| Release workflow | ✅   | `.github/workflows/release.yml` |
-| Build workflow | ✅   | Updated to Java 21 |
-| Documentation | ✅   | `docs/building-distributions.md` |
-| .gitignore | ✅   | jpackage output excluded |
+|-----------|--------|-------|
+| Gradle `jpackage` task | ✅ | `build.gradle.kts` with OS auto-detection |
+| Release workflow | ✅ | `.github/workflows/release.yml` |
+| Build workflow | ✅ | Updated to Java 21 |
+| Documentation | ✅ | `docs/building-distributions.md` |
+| .gitignore | ✅ | jpackage output excluded |
 
 #### Files Created/Modified
 
@@ -964,8 +962,8 @@ docs/building-distributions.md        # Build and customization guide
 
 ## Project Completion Summary
 
-**Status:** All 7 phases complete
-**Last Updated:** 2025-11-30
+**Status:** All 7 phases complete + E2E Testing (Phases 1-3)
+**Last Updated:** 2025-12-02
 
 ### Learnings
 
@@ -974,6 +972,8 @@ docs/building-distributions.md        # Build and customization guide
 3. **SQLite trades operation speed for simplicity** - Individual cache operations slower than MapDB but unified storage is worth it
 4. **Virtual threads are the big win** - Primary Phase 6 optimization, scales with file count
 5. **TDD throughout** - Tests written before implementation in Phases 4-6
+6. **E2E testing requires shared state management** - Robot and app instances must be reused across test classes to avoid ScreenLock deadlocks
+7. **Page Object pattern essential for maintainability** - Fluent API with robot.waitForIdle() ensures reliable headless execution
 
 ### Action Items & Next Steps
 
@@ -995,7 +995,7 @@ docs/building-distributions.md        # Build and customization guide
 ### Removed
 
 | Dependency | Reason |
-| --- | --- |
+|------------|--------|
 | HSQLDB 1.8.0.10 | Replaced by SQLite |
 | MapDB 0.9.9-SNAPSHOT | Replaced by SQLite |
 | Lucene | Replaced by simple string search |
@@ -1003,7 +1003,7 @@ docs/building-distributions.md        # Build and customization guide
 ### Added
 
 | Dependency | Purpose |
-| --- | --- |
+|------------|---------|
 | SQLite JDBC (xerial) | Database |
 | FlatLaf | Modern look and feel |
 | Jakarta XML Binding | JAXB replacement |
@@ -1014,7 +1014,7 @@ docs/building-distributions.md        # Build and customization guide
 ## Risk Mitigation
 
 | Risk | Mitigation |
-| --- | --- |
+|------|------------|
 | Low test coverage | Build comprehensive tests in Phase 2 before risky changes |
 | SQLite migration breaks things | Feature flag to switch backends during testing |
 | SwingX incompatible with Java 21 | Test first, replace only if broken |
@@ -1028,3 +1028,132 @@ docs/building-distributions.md        # Build and customization guide
 - `thoughts/shared/handoffs/general/2025-11-28_22-32-58_java21-gradle-modernization.md` - Original analysis
 - `thoughts/shared/handoffs/general/2025-11-28_21-46-26_java21-upgrade-analysis.md` - Initial upgrade analysis
 - `Libraries/README.txt` - Third-party JAR versions
+
+---
+
+## Addendum: GUI Automation E2E Testing (2025-12-01)
+
+Following the completion of all 7 modernization phases, GUI automation end-to-end testing was added to ensure ongoing quality and enable confident refactoring.
+
+**Design Document:** `docs/plans/2025-12-01-gui-automation-e2e-design.md`
+
+### Scope
+
+Full GUI automation for Swing using AssertJ Swing with Page Object pattern, covering:
+- Import workflow
+- Keyword tagging workflow
+- Search workflow
+
+### Key Decisions
+
+| Decision | Choice |
+|----------|--------|
+| Framework | AssertJ Swing 3.17.1 |
+| Architecture | Page Objects wrapping AssertJ Swing interactions |
+| Test location | `Program/src/test/java/org/jphototagger/e2e/` |
+| CI execution | Xvfb (X Virtual Framebuffer) in GitHub Actions |
+
+### Implementation Status
+
+| Phase | Description | Status |
+|-------|-------------|--------|
+| Phase 1 | Infrastructure (base classes, test data, Gradle task, CI) + Import workflow | ✅ Complete |
+| Phase 2 | Keyword tagging workflow tests | ✅ Complete |
+| Phase 3 | Search workflow tests | ✅ Complete |
+
+### Phase 2 Completion Summary (Keyword Tagging)
+
+**Completed:** 2025-12-02
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Component names | ✅ | Added setName() to selection panel components |
+| KeywordsPanelPage | ✅ | Page object for keyword tree/list interactions |
+| EditMetadataPage | ✅ | Page object for metadata editing panel |
+| KeywordTaggingWorkflowTest | ✅ | 4 tests (2 enabled, 2 disabled) |
+| Test isolation fix | ✅ | Reuse robot/app across test classes |
+| Button click fix | ✅ | Use doClick() for Xvfb headless compatibility |
+
+**Test Results:** 2 passed, 2 skipped (@Disabled), 0 failures
+
+**Key Learnings:**
+- AppInit singleton requires reusing app instance across test classes
+- HSQLDB lock files need cleanup between interrupted test runs
+- Use `doClick()` via GuiActionRunner for off-screen buttons in Xvfb
+
+### Phase 3 Completion Summary (Search Workflow)
+
+**Completed:** 2025-12-02
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Component names | ✅ | Added setName() to AdvancedSearchPanel (12 components) |
+| SearchPanelPage | ✅ | Page object for fast/advanced search (263 lines, 17 methods) |
+| SearchWorkflowTest | ✅ | 4 tests (3 enabled, 1 disabled) |
+| Code review | ✅ | Approved for production |
+
+**Test Results:** 3 passed, 1 skipped (@Disabled), 0 failures
+
+### E2E Test Summary
+
+| Test Class | Tests | Passed | Skipped | Time |
+|------------|-------|--------|---------|------|
+| ImportWorkflowTest | 2 | 1 | 1 | 143s |
+| KeywordTaggingWorkflowTest | 4 | 2 | 2 | 183s |
+| SearchWorkflowTest | 4 | 3 | 1 | 275s |
+| **Total** | **10** | **6** | **4** | **~10min** |
+
+### Files Created
+
+```
+Program/src/test/java/org/jphototagger/e2e/
+├── base/
+│   ├── E2ETestBase.java           # Shared setup/teardown, robot reuse across classes
+│   └── TestDataManager.java        # Copy test photos to temp dirs
+├── pages/
+│   ├── MainWindowPage.java         # Main frame interactions
+│   ├── ImportDialogPage.java       # Import workflow page object
+│   ├── KeywordsPanelPage.java      # Keyword tree/list page object
+│   ├── EditMetadataPage.java       # Metadata editing page object
+│   └── SearchPanelPage.java        # Fast/advanced search page object
+└── workflows/
+    ├── ImportWorkflowTest.java     # Import workflow tests
+    ├── KeywordTaggingWorkflowTest.java  # Keyword tagging tests
+    └── SearchWorkflowTest.java     # Search workflow tests
+
+Program/src/test/resources/e2e/
+└── photos/
+    ├── test-photo-01.jpg           # Minimal placeholder JPG
+    ├── test-photo-02.jpg
+    └── test-photo-03.jpg
+
+Program/src/org/jphototagger/program/module/keywords/
+└── KeywordsPanel.java              # Added component names for E2E
+
+Program/src/org/jphototagger/program/module/search/
+└── AdvancedSearchPanel.java        # Added setComponentNames() method
+
+.github/workflows/build.yml         # Updated with Xvfb E2E step
+gradle/libs.versions.toml           # Added assertj-swing dependency
+```
+
+### Running E2E Tests
+
+```bash
+# Run E2E tests locally (requires display)
+./gradlew :Program:e2eTest
+
+# Run E2E tests in headless environment
+xvfb-run --auto-servernum ./gradlew :Program:e2eTest
+```
+
+### Relationship to Modernization
+
+The E2E testing infrastructure builds on the Phase 2 testing foundation:
+- Uses JUnit 5 (established in Phase 2)
+- Leverages Gradle test infrastructure (Phase 1)
+- Runs in GitHub Actions CI (Phase 1/7)
+- Provides regression protection for future optimization work
+
+This completes the quality assurance layer for the modernized JPhotoTagger, enabling confident maintenance and feature development.
+
