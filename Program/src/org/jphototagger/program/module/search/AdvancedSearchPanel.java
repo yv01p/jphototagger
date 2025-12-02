@@ -67,12 +67,27 @@ public final class AdvancedSearchPanel extends PanelExt implements Persistence {
         setDefaultInputOfComponent();
         setFocusToInputInTab(tabbedPane.getSelectedComponent());
         MnemonicUtil.setMnemonics((Container) this);
+        setComponentNames();
     }
 
     private void setUndefinedSearchName() {
         setSearchName(Bundle.getString(AdvancedSearchPanel.class, "AdvancedSearchPanel.UndefinedName"));
     }
 
+    private void setComponentNames() {
+        setName("advancedSearchPanel");
+        tabbedPane.setName("advancedSearch.tabbedPane");
+        panelKeywords.setName("advancedSearch.panelKeywords");
+        panelKeywordsInput.setName("advancedSearch.panelKeywordsInput");
+        panelSimpleSql.setName("advancedSearch.panelSimpleSql");
+        panelColumns.setName("advancedSearch.panelColumns");
+        panelCustomSql.setName("advancedSearch.panelCustomSql");
+        textAreaCustomSqlQuery.setName("advancedSearch.textAreaCustomSql");
+        buttonSaveSearch.setName("advancedSearch.btnSave");
+        buttonSaveAs.setName("advancedSearch.btnSaveAs");
+        buttonResetColumns.setName("advancedSearch.btnReset");
+        buttonSearch.setName("advancedSearch.btnSearch");
+    }
 
     private void setAutocomplete() {
         if (isAutocomplete()) {
