@@ -38,11 +38,25 @@ public abstract class E2ETestBase {
 
     @BeforeAll
     static void launchApp() {
-        robot = BasicRobot.robotWithNewAwtHierarchy();
+        // Reuse existing robot if available (prevents ScreenLock deadlock across test classes)
+        if (robot == null) {
+            robot = BasicRobot.robotWithNewAwtHierarchy();
+            // Configure robot timeouts for CI environment
+            robot.settings().delayBetweenEvents(50);
+            robot.settings().eventPostingDelay(100);
+        }
 
-        // Configure robot timeouts for CI environment
-        robot.settings().delayBetweenEvents(50);
-        robot.settings().eventPostingDelay(100);
+        // Check if app is already initialized (happens when multiple test classes run in same JVM)
+        Frame existingFrame = findExistingMainFrame();
+        if (existingFrame != null) {
+            // App already running, reuse it
+            window = new FrameFixture(robot, existingFrame);
+            window.show();
+            robot.waitForIdle();
+            dismissAllDialogs();
+            ensureMainWindowFocus();
+            return;
+        }
 
         // Launch JPhotoTagger on the EDT
         // Use -nosplash for faster startup in tests
@@ -166,6 +180,22 @@ public abstract class E2ETestBase {
         return null;
     }
 
+    /**
+     * Finds an existing JPhotoTagger main frame without waiting.
+     * Returns null if no frame exists (app not yet started).
+     */
+    private static Frame findExistingMainFrame() {
+        Frame[] frames = Frame.getFrames();
+        // First, look for frame with JPhotoTagger title
+        for (Frame frame : frames) {
+            if (frame.isVisible() && frame.getTitle() != null
+                    && frame.getTitle().contains("JPhotoTagger")) {
+                return frame;
+            }
+        }
+        return null;
+    }
+
     private static Frame findMainFrame() {
         long start = System.currentTimeMillis();
 
@@ -217,8 +247,8 @@ public abstract class E2ETestBase {
 
     @AfterAll
     static void tearDown() {
-        if (window != null) {
-            window.cleanUp();
-        }
+        // Don't clean up the window - the app singleton persists across test classes.
+        // The window will be reused by subsequent test classes.
+        // Cleanup only happens when the JVM exits.
     }
 }

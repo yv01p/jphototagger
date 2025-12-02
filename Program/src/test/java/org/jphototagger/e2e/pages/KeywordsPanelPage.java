@@ -58,7 +58,13 @@ public class KeywordsPanelPage {
      */
     public KeywordsPanelPage switchToListView() {
         window.robot().waitForIdle();
-        window.button("buttonDisplaySelKeywordsList").click();
+        var button = window.button("buttonDisplaySelKeywordsList");
+        var target = button.target();
+        // Use doClick() instead of robot click to avoid screen boundary issues in headless
+        org.assertj.swing.edt.GuiActionRunner.execute(() -> {
+            target.doClick();
+            return null;
+        });
         window.robot().waitForIdle();
         return this;
     }
@@ -70,7 +76,13 @@ public class KeywordsPanelPage {
      */
     public KeywordsPanelPage switchToTreeView() {
         window.robot().waitForIdle();
-        window.button("buttonDisplaySelKeywordsTree").click();
+        var button = window.button("buttonDisplaySelKeywordsTree");
+        var target = button.target();
+        // Use doClick() instead of robot click to avoid screen boundary issues in headless
+        org.assertj.swing.edt.GuiActionRunner.execute(() -> {
+            target.doClick();
+            return null;
+        });
         window.robot().waitForIdle();
         return this;
     }
