@@ -954,8 +954,8 @@ docs/building-distributions.md        # Build and customization guide
 
 ## Project Completion Summary
 
-**Status:** All 7 phases complete
-**Last Updated:** 2025-11-30
+**Status:** All 7 phases complete + E2E Testing (Phases 1-3)
+**Last Updated:** 2025-12-02
 
 ### Learnings
 
@@ -964,6 +964,8 @@ docs/building-distributions.md        # Build and customization guide
 3. **SQLite trades operation speed for simplicity** - Individual cache operations slower than MapDB but unified storage is worth it
 4. **Virtual threads are the big win** - Primary Phase 6 optimization, scales with file count
 5. **TDD throughout** - Tests written before implementation in Phases 4-6
+6. **E2E testing requires shared state management** - Robot and app instances must be reused across test classes to avoid ScreenLock deadlocks
+7. **Page Object pattern essential for maintainability** - Fluent API with robot.waitForIdle() ensures reliable headless execution
 
 ### Action Items & Next Steps
 
@@ -1047,29 +1049,86 @@ Full GUI automation for Swing using AssertJ Swing with Page Object pattern, cove
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| Phase 1 | Infrastructure (base classes, test data, Gradle task, CI) | ✅ Complete |
-| Phase 2 | Import workflow tests | ✅ Complete |
-| Phase 3 | Keyword tagging workflow tests | 🔲 Pending |
-| Phase 4 | Search workflow tests | 🔲 Pending |
+| Phase 1 | Infrastructure (base classes, test data, Gradle task, CI) + Import workflow | ✅ Complete |
+| Phase 2 | Keyword tagging workflow tests | ✅ Complete |
+| Phase 3 | Search workflow tests | ✅ Complete |
+
+### Phase 2 Completion Summary (Keyword Tagging)
+
+**Completed:** 2025-12-02
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Component names | ✅ | Added setName() to selection panel components |
+| KeywordsPanelPage | ✅ | Page object for keyword tree/list interactions |
+| EditMetadataPage | ✅ | Page object for metadata editing panel |
+| KeywordTaggingWorkflowTest | ✅ | 4 tests (2 enabled, 2 disabled) |
+| Test isolation fix | ✅ | Reuse robot/app across test classes |
+| Button click fix | ✅ | Use doClick() for Xvfb headless compatibility |
+
+**Test Results:** 2 passed, 2 skipped (@Disabled), 0 failures
+
+**Key Learnings:**
+- AppInit singleton requires reusing app instance across test classes
+- HSQLDB lock files need cleanup between interrupted test runs
+- Use `doClick()` via GuiActionRunner for off-screen buttons in Xvfb
+
+### Phase 3 Completion Summary (Search Workflow)
+
+**Completed:** 2025-12-02
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Component names | ✅ | Added setName() to AdvancedSearchPanel (12 components) |
+| SearchPanelPage | ✅ | Page object for fast/advanced search (263 lines, 17 methods) |
+| SearchWorkflowTest | ✅ | 4 tests (3 enabled, 1 disabled) |
+| Code review | ✅ | Approved for production |
+
+**Test Results:** 3 passed, 1 skipped (@Disabled), 0 failures
+
+**Key Findings:**
+- FastSearchPanel already had component names (no changes needed)
+- Fluent API pattern with `robot.waitForIdle()` before/after operations
+- Page objects provide excellent test readability
+
+### E2E Test Summary
+
+| Test Class | Tests | Passed | Skipped | Time |
+|------------|-------|--------|---------|------|
+| ImportWorkflowTest | 2 | 1 | 1 | 143s |
+| KeywordTaggingWorkflowTest | 4 | 2 | 2 | 183s |
+| SearchWorkflowTest | 4 | 3 | 1 | 275s |
+| **Total** | **10** | **6** | **4** | **~10min** |
 
 ### Files Created
 
 ```
 Program/src/test/java/org/jphototagger/e2e/
 ├── base/
-│   ├── E2ETestBase.java           # Shared setup/teardown, robot init
+│   ├── E2ETestBase.java           # Shared setup/teardown, robot reuse across classes
 │   └── TestDataManager.java        # Copy test photos to temp dirs
 ├── pages/
 │   ├── MainWindowPage.java         # Main frame interactions
-│   └── ImportDialogPage.java       # Import workflow page object
+│   ├── ImportDialogPage.java       # Import workflow page object
+│   ├── KeywordsPanelPage.java      # Keyword tree/list page object
+│   ├── EditMetadataPage.java       # Metadata editing page object
+│   └── SearchPanelPage.java        # Fast/advanced search page object
 └── workflows/
-    └── ImportWorkflowTest.java     # Import workflow tests
+    ├── ImportWorkflowTest.java     # Import workflow tests
+    ├── KeywordTaggingWorkflowTest.java  # Keyword tagging tests
+    └── SearchWorkflowTest.java     # Search workflow tests
 
 Program/src/test/resources/e2e/
 └── photos/
     ├── test-photo-01.jpg           # Minimal placeholder JPG
     ├── test-photo-02.jpg
     └── test-photo-03.jpg
+
+Program/src/org/jphototagger/program/module/keywords/
+└── KeywordsPanel.java              # Added component names for E2E
+
+Program/src/org/jphototagger/program/module/search/
+└── AdvancedSearchPanel.java        # Added setComponentNames() method
 
 .github/workflows/build.yml         # Updated with Xvfb E2E step
 gradle/libs.versions.toml           # Added assertj-swing dependency
@@ -1094,3 +1153,18 @@ The E2E testing infrastructure builds on the Phase 2 testing foundation:
 - Provides regression protection for future optimization work
 
 This completes the quality assurance layer for the modernized JPhotoTagger, enabling confident maintenance and feature development.
+
+### E2E Testing Commits
+
+```
+f178067f9 test: add SearchWorkflowTest for E2E search testing
+daa1af234 test: add SearchPanelPage for E2E search testing
+605cf280c feat: add component names to AdvancedSearchPanel for E2E testing
+3774d60f0 fix: E2E test isolation - reuse robot and app across test classes
+19663ec3d fix: correct requireVisible order and tab selection in page objects
+b56aa1991 test: add KeywordTaggingWorkflowTest with E2E keyword tests
+9e4169657 test: add EditMetadataPage for E2E keyword editing tests
+25496ed56 fix: correct component names in KeywordsPanelPage for selection panel
+1b6ac435d test: add KeywordsPanelPage for E2E keyword selection tests
+93eca1ad5 feat: add component names for E2E keyword tagging tests
+```
